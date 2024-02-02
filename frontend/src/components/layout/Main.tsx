@@ -7,7 +7,7 @@ export default function Main({ children }: { children?: ReactNode }) {
 		<main>
 			<div className="container">
 				<Header />
-				<div className="flex flex-col">
+				<div className="flex flex-col lg:px-10">
 					{children}
 				</div>
 			</div>

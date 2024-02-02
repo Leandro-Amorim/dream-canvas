@@ -39,8 +39,12 @@ export default function Footer() {
 			</div>
 			<div className="container">
 				<Separator />
-				<div className="h-16 py-4">
+				<div className="h-16 py-4 flex justify-between">
 					<Link href={'/'} className="text-sm text-muted-foreground">© 2024 Dream Canvas. All rights reserved.</Link>
+					<div className="flex gap-4">
+						<Link href={'/'} className="text-sm text-muted-foreground">Contact</Link>
+						<Link href={'/'} className="text-sm text-muted-foreground">Privacy</Link>
+					</div>
 				</div>
 			</div>
 
