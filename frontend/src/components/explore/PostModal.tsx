@@ -27,12 +27,12 @@ export default function PostModal() {
 
 								<div className="flex items-center">
 									<Avatar className="size-11">
-										<AvatarImage src="/test.jpg" alt="@shadcn" />
+										<AvatarImage  className="object-cover" src="/test.jpg" alt="@shadcn" />
 										<AvatarFallback>CN</AvatarFallback>
 									</Avatar>
 									<div className="flex flex-col ml-2 gap-1">
-										<h3 className="font-medium leading-none">User</h3>
-										<h3 className="font-normal text-sm leading-none text-muted-foreground">Feb 02, 2024</h3>
+										<h3 className="font-medium ">User</h3>
+										<h3 className="font-normal text-sm  text-muted-foreground">Feb 02, 2024</h3>
 									</div>
 								</div>
 
@@ -45,7 +45,7 @@ export default function PostModal() {
 							<div className="grow min-h-0 flex flex-col">
 
 								<div className="pt-4 flex flex-col gap-3">
-									<h3 className="pl-2 font-medium text-lg leading-none shrink-0">My title</h3>
+									<h3 className="pl-2 font-medium text-lg  shrink-0">My title</h3>
 									<div className="w-full text-sm h-[250px]">
 										<ScrollArea className="h-full w-full px-2 leading-relaxed" type="auto">
 											Jokester began sneaking into the castle in the middle of the night and leaving
@@ -111,31 +111,31 @@ export default function PostModal() {
 									</Tabs>
 									<div className="w-full flex mt-8">
 										<div className="flex-1 flex flex-col">
-											<h3 className="font-medium leading-none">Model</h3>
-											<span className="mt-3 text-sm leading-none text-secondary-foreground">Juggernaut XL</span>
+											<h3 className="font-medium ">Model</h3>
+											<span className="mt-3 text-sm  text-secondary-foreground">Juggernaut XL</span>
 										</div>
 										<div className="flex-1 flex flex-col">
-											<h3 className="font-medium leading-none">Sampling Method</h3>
-											<span className="mt-3 text-sm leading-none text-secondary-foreground">Euler Ancestral</span>
+											<h3 className="font-medium ">Sampling Method</h3>
+											<span className="mt-3 text-sm  text-secondary-foreground">Euler Ancestral</span>
 										</div>
 										<div className="flex-1 flex flex-col">
-											<h3 className="font-medium leading-none">Sampling Steps</h3>
-											<span className="mt-3 text-sm leading-none text-secondary-foreground">50</span>
+											<h3 className="font-medium ">Sampling Steps</h3>
+											<span className="mt-3 text-sm  text-secondary-foreground">50</span>
 										</div>
 
 									</div>
 									<div className="w-full flex mt-8">
 										<div className="flex-1 flex flex-col">
-											<h3 className="font-medium leading-none">CFG Scale</h3>
-											<span className="mt-3 text-sm leading-none text-secondary-foreground">10</span>
+											<h3 className="font-medium ">CFG Scale</h3>
+											<span className="mt-3 text-sm  text-secondary-foreground">10</span>
 										</div>
 										<div className="flex-1 flex flex-col">
-											<h3 className="font-medium leading-none">Seed</h3>
-											<span className="mt-3 text-sm leading-none text-secondary-foreground">12345678</span>
+											<h3 className="font-medium ">Seed</h3>
+											<span className="mt-3 text-sm  text-secondary-foreground">12345678</span>
 										</div>
 										<div className="flex-1 flex flex-col">
-											<h3 className="font-medium leading-none">Dimensions</h3>
-											<span className="mt-3 text-sm leading-none text-secondary-foreground">512x1024</span>
+											<h3 className="font-medium ">Dimensions</h3>
+											<span className="mt-3 text-sm  text-secondary-foreground">512x1024</span>
 										</div>
 
 									</div>
@@ -158,17 +158,17 @@ export default function PostModal() {
 						</div>
 
 						<div className="w-full mt-4">
-							<h3 className="font-medium text-xl leading-none shrink-0">Comments</h3>
+							<h3 className="font-medium text-xl  shrink-0">Comments</h3>
 							<div className="w-full max-w-[800px] mt-4 flex flex-col mx-auto gap-4">
 								<div className="flex flex-col gap-2">
 									<div className="w-full flex items-center mt-2 justify-between ">
 										<div className="flex items-center">
 											<Avatar className="size-8">
-												<AvatarImage src="/test.jpg" alt="@shadcn" />
+												<AvatarImage  className="object-cover" src="/test.jpg" alt="@shadcn" />
 												<AvatarFallback>CN</AvatarFallback>
 											</Avatar>
 											<div className="flex items-baseline">
-												<h4 className="ml-2 font-medium leading-none text-base">My awesome user</h4>
+												<h4 className="ml-2 font-medium  text-base">My awesome user</h4>
 												<span className="ml-2 text-[12px] font-semibold text-muted-foreground">5h ago</span>
 											</div>
 
@@ -192,11 +192,11 @@ export default function PostModal() {
 									<div className="w-full flex items-center mt-2 justify-between ">
 										<div className="flex items-center">
 											<Avatar className="size-8">
-												<AvatarImage src="/test.jpg" alt="@shadcn" />
+												<AvatarImage  className="object-cover" src="/test.jpg" alt="@shadcn" />
 												<AvatarFallback>CN</AvatarFallback>
 											</Avatar>
 											<div className="flex items-baseline">
-												<h4 className="ml-2 font-medium leading-none text-base">My awesome user</h4>
+												<h4 className="ml-2 font-medium  text-base">My awesome user</h4>
 												<span className="ml-2 text-[12px] font-semibold text-muted-foreground">5h ago</span>
 											</div>
 
@@ -220,11 +220,11 @@ export default function PostModal() {
 									<div className="w-full flex items-center mt-2 justify-between ">
 										<div className="flex items-center">
 											<Avatar className="size-8">
-												<AvatarImage src="/test.jpg" alt="@shadcn" />
+												<AvatarImage  className="object-cover" src="/test.jpg" alt="@shadcn" />
 												<AvatarFallback>CN</AvatarFallback>
 											</Avatar>
 											<div className="flex items-baseline">
-												<h4 className="ml-2 font-medium leading-none text-base">My awesome user</h4>
+												<h4 className="ml-2 font-medium  text-base">My awesome user</h4>
 												<span className="ml-2 text-[12px] font-semibold text-muted-foreground">5h ago</span>
 											</div>
 
@@ -248,11 +248,11 @@ export default function PostModal() {
 									<div className="w-full flex items-center mt-2 justify-between ">
 										<div className="flex items-center">
 											<Avatar className="size-8">
-												<AvatarImage src="/test.jpg" alt="@shadcn" />
+												<AvatarImage className="object-cover"  src="/test.jpg" alt="@shadcn" />
 												<AvatarFallback>CN</AvatarFallback>
 											</Avatar>
 											<div className="flex items-baseline">
-												<h4 className="ml-2 font-medium leading-none text-base">My awesome user</h4>
+												<h4 className="ml-2 font-medium  text-base">My awesome user</h4>
 												<span className="ml-2 text-[12px] font-semibold text-muted-foreground">5h ago</span>
 											</div>
 

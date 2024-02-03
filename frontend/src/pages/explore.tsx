@@ -16,7 +16,7 @@ export default function Explore() {
 
 	return (
 		<Main>
-			<PostModal/>
+			<PostModal />
 			<div className="flex flex-col mt-16 items-center">
 
 				<div className="flex items-center w-full max-w-[600px]">
@@ -40,7 +40,7 @@ export default function Explore() {
 
 				<div className={`w-full flex gap-2 transition-all overflow-hidden ${showFilter ? 'h-[76px] mt-6' : 'h-0 mt-0'}`}>
 					<div className="flex-1 flex flex-col gap-3 px-1 pb-1">
-						<h3 className="font-medium leading-none">Model</h3>
+						<h3 className="font-medium ">Model</h3>
 						<Select defaultValue='juggernaut_xl'>
 							<SelectTrigger className="w-full h-12">
 								<SelectValue />
@@ -51,7 +51,7 @@ export default function Explore() {
 						</Select>
 					</div>
 					<div className="flex-1 flex flex-col gap-3 px-1 pb-1">
-						<h3 className="font-medium leading-none">Content type</h3>
+						<h3 className="font-medium ">Content type</h3>
 						<Select defaultValue='2'>
 							<SelectTrigger className="w-full h-12">
 								<SelectValue />
@@ -63,7 +63,7 @@ export default function Explore() {
 						</Select>
 					</div>
 					<div className="flex-1 flex flex-col gap-3 px-1 pb-1">
-						<h3 className="font-medium leading-none">Timeframe</h3>
+						<h3 className="font-medium ">Timeframe</h3>
 						<Select defaultValue='all_time'>
 							<SelectTrigger className="w-full h-12">
 								<SelectValue />
