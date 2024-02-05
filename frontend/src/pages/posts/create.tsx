@@ -34,31 +34,33 @@ export default function CreatePost() {
 
 	return (
 		<Main>
-			<div className="flex w-full gap-10">
-				<div className="flex-1">
-					<div className="w-full  flex flex-col h-[700px] gap-4">
-						<div className="w-full grow bg-secondary rounded-lg relative overflow-hidden p-4">
+			<div className="flex w-full gap-8 xl:gap-10 flex-col xl:flex-row">
+
+				<div className="flex-1 flex flex-col grow gap-4">
+
+						<div className="w-full grow min-h-[500px] bg-secondary rounded-lg relative overflow-hidden p-4">
 							<Image src={'/test-post.png'} alt="Post" fill={true} className="object-contain" />
 						</div>
 						<div className="w-full h-[120px] bg-secondary rounded-lg p-2 gap-2 flex">
-							<div className="h-full aspect-square rounded-md relative overflow-hidden">
+							<div className="h-full aspect-square rounded-md relative overflow-hidden shrink-0">
 								<Button className="absolute top-1 right-1 z-10 text rounded-full size-5" size={'icon'} variant={"secondary"}><IconX size={14} /></Button>
 								<Image src={'/test-post.png'} alt="Post" fill={true} className="object-cover" />
 							</div>
-							<div className="h-full aspect-square rounded-md relative overflow-hidden">
+							<div className="h-full aspect-square rounded-md relative overflow-hidden shrink-0">
 								<Button className="absolute top-1 right-1 z-10 text rounded-full size-5" size={'icon'} variant={"secondary"}><IconX size={14} /></Button>
 								<Image src={'/test-post.png'} alt="Post" fill={true} className="object-cover" />
 							</div>
-							<div className="h-full aspect-square rounded-md relative overflow-hidden">
+							<div className="h-full aspect-square rounded-md relative overflow-hidden shrink-0">
 								<Button className="absolute top-1 right-1 z-10 text rounded-full size-5" size={'icon'} variant={"secondary"}><IconX size={14} /></Button>
 								<Image src={'/test-post.png'} alt="Post" fill={true} className="object-cover" />
 							</div>
-							<div className="h-full aspect-square rounded-md relative overflow-hidden bg-white flex items-center justify-center text-primary border-[3px] border-primary">
+							<div className="h-full aspect-square rounded-md relative overflow-hidden shrink-0 bg-white flex items-center justify-center text-primary border-[3px] border-primary">
 								<IconCirclePlus size={40} />
 							</div>
 						</div>
-					</div>
+
 				</div>
+
 				<div className="flex-1">
 					<Form {...form} >
 						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -131,12 +133,13 @@ export default function CreatePost() {
 								/>
 							</div>
 							<div className="w-full flex justify-end">
-								<Button size={'lg'} type="submit">Submit</Button>
+								<Button size={'lg'} className="w-full lg:w-auto" type="submit">Submit</Button>
 							</div>
 
 						</form>
 					</Form>
 				</div>
+
 			</div>
 		</Main>
 	);

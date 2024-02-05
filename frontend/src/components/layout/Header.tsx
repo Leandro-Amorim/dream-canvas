@@ -6,31 +6,31 @@ import { Button } from "../ui/button";
 export default function Header() {
 
 	return (
-		<div className="flex h-28">
+		<div className="flex h-20 md:h-28">
 			<div className="flex-1 flex items-center">
 				<GitHubLogoIcon height={48} width={48} className="shrink-0 text-primary" />
-				<h2 className="pl-2 pb-1 text-3xl font-semibold">Dream Canvas</h2>
+				<h2 className="pl-2 pb-1 text-3xl font-semibold hidden xl:block">Dream Canvas</h2>
 			</div>
 			<div className="flex-1 flex items-center justify-center">
 				<NavigationMenu>
 					<NavigationMenuList>
 						<NavigationMenuItem>
 							<Link href="/#features" legacyBehavior passHref>
-								<NavigationMenuLink className={`${navigationMenuTriggerStyle()} min-w-28 !h-10 text-base`}>
+								<NavigationMenuLink className={`${navigationMenuTriggerStyle()} md:min-w-24 xl:min-w-28 !h-10 text-base`}>
 									Features
 								</NavigationMenuLink>
 							</Link>
 						</NavigationMenuItem>
 						<NavigationMenuItem>
 							<Link href="/#pricing" legacyBehavior passHref>
-								<NavigationMenuLink className={`${navigationMenuTriggerStyle()} min-w-28 !h-10 text-base`}>
+								<NavigationMenuLink className={`${navigationMenuTriggerStyle()} md:min-w-24 xl:min-w-28 !h-10 text-base`}>
 									Pricing
 								</NavigationMenuLink>
 							</Link>
 						</NavigationMenuItem>
 						<NavigationMenuItem>
 							<Link href="/explore" legacyBehavior passHref>
-								<NavigationMenuLink className={`${navigationMenuTriggerStyle()} min-w-28 !h-10 text-base`}>
+								<NavigationMenuLink className={`${navigationMenuTriggerStyle()} md:min-w-24 xl:min-w-28 !h-10 text-base`}>
 									Explore
 								</NavigationMenuLink>
 							</Link>
@@ -38,9 +38,13 @@ export default function Header() {
 					</NavigationMenuList>
 				</NavigationMenu>
 			</div>
-			<div className="flex-1 flex items-center gap-3 justify-end">
-				<Button variant={'outline'} size={"lg"}>Sign in</Button>
-				<Button size={"lg"}>Generate</Button>
+			<div className="flex-1 items-center gap-3 justify-end hidden md:flex">
+				<Button variant={'outline'} size={"default"}>Sign in</Button>
+				<Button size={"default"}>Generate</Button>
+			</div>
+			<div className="flex-1 flex items-center gap-2 justify-end md:hidden">
+				<Button variant={'outline'} size={"sm"}>Sign in</Button>
+				<Button size={"sm"}>Generate</Button>
 			</div>
 		</div>
 	)

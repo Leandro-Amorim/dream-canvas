@@ -8,22 +8,24 @@ export default function ModifierSection() {
 
 	return (
 		<div className="w-full mt-8 flex flex-col">
+
 			<div className="flex justify-between">
 				<div className="flex items-end">
 					<h3 className="text-2xl font-semibold">Modifiers</h3>
 					<Button variant='link' className="ml-2 p-0 pb-[1px] h-fit">See All</Button>
 				</div>
-				<div className="flex items-center">
-					<MagnifyingGlassIcon className={`w-4 h-4 relative left-6 top-2 -translate-y-1/2`} />
+				<div className="relative">
+					<MagnifyingGlassIcon className={`w-4 h-4 absolute left-2 top-[19px] -translate-y-1/2`} />
 					<Input placeholder="Search for modifiers" className="w-52 pl-7" />
 				</div>
 			</div>
+			
 			<div className="mt-6">
 				<div className="w-full px-12">
 					<Carousel opts={{ align: "start", }} className="w-full">
 						<CarouselContent>
 							{Array.from({ length: 20 }).map((_, index) => (
-								<CarouselItem key={index} className="basis-52">
+								<CarouselItem key={index} className="basis-[152px] lg:basis-[200px]">
 									<ModifierCard />
 								</CarouselItem>
 							))}

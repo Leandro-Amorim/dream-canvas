@@ -6,13 +6,13 @@ import { IconCrown } from "@tabler/icons-react";
 export default function ModelCard() {
 	return (
 		<div className="flex flex-col gap-2">
-			<Card className="w-48 aspect-[3/4] overflow-hidden">
-				<CardContent className="relative h-full n">
+			<Card className="w-36 lg:w-48 aspect-[3/4] overflow-hidden">
+				<CardContent className="relative h-full">
 					<Image src={'/test.jpg'} fill={true} className="object-cover transition-all hover:scale-105 grayscale" alt="Model" />
-					<Badge variant={"default"} className="absolute bottom-1 right-1 flex gap-1 px-1  font-bold tracking-normal"><IconCrown size={20}/>Premium</Badge>
+					<Badge variant={"default"} className="absolute bottom-1 right-1 flex gap-1 px-1 font-bold tracking-normal"><IconCrown size={20} />Premium</Badge>
 				</CardContent>
 			</Card>
-			<h3 className="font-medium">My model</h3>
+			<h3 className="font-medium text-sm lg:text-base">My model</h3>
 		</div>
 
 	)
