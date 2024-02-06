@@ -1,13 +1,5 @@
-import { timestamp, pgTable, text, primaryKey, integer } from "drizzle-orm/pg-core";
+import { timestamp, pgTable, text, primaryKey, integer, boolean } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from '@auth/core/adapters';
-
-export const users = pgTable("user", {
-	id: text("id").notNull().primaryKey(),
-	name: text("name"),
-	email: text("email").notNull(),
-	emailVerified: timestamp("emailVerified", { mode: "date" }),
-	image: text("image"),
-})
 
 export const accounts = pgTable("account", {
 	userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
@@ -42,3 +34,24 @@ export const verificationTokens = pgTable("verificationToken", {
 		compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
 	})
 )
+
+export const users = pgTable("user", {
+	id: text("id").notNull().primaryKey(),
+	name: text("name"),
+	email: text("email").notNull(),
+	emailVerified: timestamp("emailVerified", { mode: "date" }),
+	image: text("image"),
+	premium: boolean("premium").notNull().default(false),
+	premiumCredits: integer("premiumCredits").notNull().default(Number(process.env.DAILY_PREMIUM_CREDITS ?? 50)),
+	generations: integer("generations").notNull().default(Number(process.env.DAILY_FREE_USER_GENERATIONS ?? 25)),
+})
+
+export const ips = pgTable("ip", {
+	address: text("address").notNull().primaryKey(),
+	lastGeneration: timestamp("lastGeneration", { mode: "date" }),
+	generations: integer("generations").notNull().default(Number(process.env.DAILY_FREE_IP_GENERATIONS ?? 5)),
+})
+
+export const system = pgTable("system", {
+	generations: integer("generations").notNull().default(Number(process.env.SYSTEM_DAILY_FREE_GENERATIONS ?? 200)),
+})
