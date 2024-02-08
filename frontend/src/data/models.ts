@@ -4,7 +4,7 @@ export const models: { [key: string]: Model } = {
 		name: 'Model A',
 		image: '/test.jpg',
 		premium: false,
-		type: 'Base'
+		type: 'base'
 	},
 	'modelB': {
 		id: 'modelB',

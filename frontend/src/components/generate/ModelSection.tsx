@@ -8,8 +8,8 @@ import { APIResponse } from "@/pages/api/data/get-models";
 import { fetchData } from "@/lib/utils";
 import { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
-import { useRecoilState } from "recoil";
-import { modelState } from "@/lib/atoms";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { modelState, modelTypeState } from "@/lib/atoms";
 
 export default function ModelSection() {
 
@@ -26,12 +26,15 @@ export default function ModelSection() {
 	}, [session]);
 
 	const [selected, setSelected] = useRecoilState(modelState);
+	const setType = useSetRecoilState(modelTypeState);
 
 	useEffect(() => {
 		if (selected === null && data?.status == 'success' && data.data) {
-			setSelected(data.data.find((el) => !el.premium)?.id ?? null);
+			const model = data.data.find((el) => !el.premium);
+			setSelected(model?.id ?? null);
+			setType(model?.type ?? null);
 		}
-	}, [selected, data, setSelected]);
+	}, [selected, data, setSelected, setType]);
 
 	const [search, setSearch] = useState('');
 
@@ -70,7 +73,7 @@ export default function ModelSection() {
 									filteredModels.map((model) => {
 										return (
 											<CarouselItem key={`item_${model.id}`} className="basis-[152px] lg:basis-[200px]">
-												<ModelCard key={model.id} model={model} selected={selected} setSelected={setSelected} userIsPremium={userIsPremium} />
+												<ModelCard key={model.id} model={model} selected={selected} setSelected={setSelected} setType={setType} userIsPremium={userIsPremium} />
 											</CarouselItem>
 										)
 									})

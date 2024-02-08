@@ -1,7 +1,7 @@
 interface Model {
 	id: string,
 	name: string,
-	type: 'Base' | 'XL',
+	type: 'base' | 'XL',
 	image: string,
 	premium: boolean,
 }

@@ -5,8 +5,14 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
 }
 
-export async function fetchData(input: string) {
-	const response = await fetch(input);
+export async function fetchData(input: string, body?: unknown) {
+
+	const response = await fetch(input, {
+		headers: body ? { "Content-Type": "application/json" } : undefined,
+		method: body ? 'POST' : 'GET',
+		body: body ? JSON.stringify(body) : undefined,
+	});
+	
 	if (!response.ok) {
 		throw new Error('Network fail');
 	}

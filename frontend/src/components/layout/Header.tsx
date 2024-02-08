@@ -40,11 +40,15 @@ export default function Header() {
 			</div>
 			<div className="flex-1 items-center gap-3 justify-end hidden md:flex">
 				<Button variant={'outline'} size={"default"}>Sign in</Button>
-				<Button size={"default"}>Generate</Button>
+				<Button size={"default"} asChild>
+					<Link href="/generate">Generate</Link>
+				</Button>
 			</div>
 			<div className="flex-1 flex items-center gap-2 justify-end md:hidden">
 				<Button variant={'outline'} size={"sm"}>Sign in</Button>
-				<Button size={"sm"}>Generate</Button>
+				<Button size={"sm"} asChild>
+					<Link href="/generate">Generate</Link>
+				</Button>
 			</div>
 		</div>
 	)

@@ -4,14 +4,15 @@ import { Badge } from "../ui/badge";
 import { IconCrown } from "@tabler/icons-react";
 import { Dispatch, SetStateAction, useCallback } from "react";
 
-export default function ModelCard({ model, selected, setSelected, userIsPremium }: { model: Model, selected: string | null, setSelected: Dispatch<SetStateAction<string | null>>, userIsPremium: boolean }) {
+export default function ModelCard({ model, selected, setSelected, setType, userIsPremium }: { model: Model, selected: string | null, setSelected: Dispatch<SetStateAction<string | null>>, setType: Dispatch<SetStateAction<string | null>>, userIsPremium: boolean }) {
 
 	const isSelected = selected === model.id;
 
 	const setModel = useCallback(() => {
 		if (model.premium && !userIsPremium) { return; }
 		setSelected(model.id);
-	}, [model.id, model.premium, userIsPremium, setSelected]);
+		setType(model.type);
+	}, [model, userIsPremium, setSelected, setType]);
 
 	return (
 		<div className="flex flex-col gap-2 cursor-pointer" onClick={setModel}>
