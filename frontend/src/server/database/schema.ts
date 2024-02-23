@@ -1,5 +1,6 @@
-import { timestamp, pgTable, text, primaryKey, integer, boolean } from "drizzle-orm/pg-core";
+import { timestamp, pgTable, text, primaryKey, integer, boolean, uuid, json } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from '@auth/core/adapters';
+import { GenerationRequest } from "@/types/generation";
 
 export const accounts = pgTable("account", {
 	userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
@@ -48,10 +49,31 @@ export const users = pgTable("user", {
 
 export const ips = pgTable("ip", {
 	address: text("address").notNull().primaryKey(),
-	lastGeneration: timestamp("lastGeneration", { mode: "date" }),
+	lastGeneration: timestamp("lastGeneration", { mode: "date" }).notNull().defaultNow(),
 	generations: integer("generations").notNull().default(Number(process.env.DAILY_FREE_IP_GENERATIONS ?? 5)),
 })
 
 export const system = pgTable("system", {
+	id: integer('id').primaryKey().default(1),
 	generations: integer("generations").notNull().default(Number(process.env.SYSTEM_DAILY_FREE_GENERATIONS ?? 200)),
+})
+
+export const freeQueue = pgTable("freeQueue", {
+	id: uuid('id').defaultRandom().notNull().primaryKey(),
+	prompt: json('prompt').notNull().$type<GenerationRequest>(),
+	status: text('status', { enum: ['QUEUED', 'PROCESSING', 'COMPLETED', 'FAILED'] }).notNull().default('QUEUED'),
+	createdAt: timestamp('createdAt', { mode: 'date' }).notNull().defaultNow(),
+	type: text('type', { enum: ['ANONYMOUS', 'FREE'] }).notNull(),
+	userId: text('userId'),
+	ipAddress: text('ipAddress'),
+})
+
+export const priorityQueue = pgTable("priorityQueue", {
+	id: uuid('id').defaultRandom().notNull().primaryKey(),
+	prompt: json('prompt').notNull().$type<GenerationRequest>(),
+	status: text('status', { enum: ['QUEUED', 'PROCESSING', 'COMPLETED', 'FAILED'] }).notNull().default('QUEUED'),
+	createdAt: timestamp('createdAt', { mode: 'date' }).notNull().defaultNow(),
+	userId: text('userId').notNull(),
+	premium: boolean('premium').notNull(),
+	cost: integer('cost').default(0).notNull()
 })

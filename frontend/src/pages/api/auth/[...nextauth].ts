@@ -40,6 +40,7 @@ export const authOptions: NextAuthOptions = {
 		async session({ session, user }) {
 			//@ts-ignore
 			session.user.premium = user.premium;
+			session.user.id = user.id;
 			return session;
 		}
 	},

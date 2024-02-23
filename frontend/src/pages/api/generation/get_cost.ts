@@ -1,4 +1,4 @@
-import { modelArray } from '@/data/models';
+import calculateCost from '@/server/generation/calculateCost';
 import { GenericAPIResponse } from '@/types/api';
 import { GenerationRequest } from '@/types/generation';
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -12,17 +12,10 @@ interface APIRequest extends NextApiRequest {
 
 export default async function handler(req: APIRequest, res: NextApiResponse) {
 	try {
-		let cost = 0;
-		if (req.body.settings.highPriority) {
-			cost += 10;
-		}
-		if (req.body.settings.hires.enabled) {
-			cost += 5;
-		}
 
 		return res.status(200).json({
 			status: 'success',
-			data: cost
+			data: calculateCost(req.body)
 		} satisfies APIResponse);
 		
 	} catch (error) {

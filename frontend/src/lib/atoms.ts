@@ -42,3 +42,23 @@ export const generationRequestState = selector({
 		} satisfies GenerationRequest as GenerationRequest
 	},
 });
+
+export const generationStatusState = atom({
+	key: 'generationStatusState',
+	default: {
+		id: null as null | string,
+		type: null as null | 'free' | 'priority',
+		status: null as null | 'QUEUED' | 'PROCESSING' | 'COMPLETED' | 'FAILED',
+		data: null as null | {
+			url: string,
+			refunded: boolean,
+		}
+	}
+})
+
+export const generationToastState = atom({
+	key: 'generationToastState',
+	default: {
+		open: false,
+	}
+})

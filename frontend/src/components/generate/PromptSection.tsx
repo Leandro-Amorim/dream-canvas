@@ -1,23 +1,25 @@
 import { GearIcon } from "@radix-ui/react-icons";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
-import { Card, CardContent } from "../ui/card";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { generationRequestState, modelTypeState, modifiersState, negativePromptState, promptState, settingsState } from "@/lib/atoms";
+import { generationRequestState, generationStatusState, generationToastState, modelTypeState, modifiersState, negativePromptState, promptState, settingsState } from "@/lib/atoms";
 import { useEffect, useMemo } from "react";
 import { fetchData, parseModifiers } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { Slider } from "../ui/slider";
 import { Input } from "../ui/input";
-import { IconDice3Filled } from "@tabler/icons-react";
+import { IconDice3Filled, IconLoader2 } from "@tabler/icons-react";
 import { Switch } from "../ui/switch";
 import { Skeleton } from "../ui/skeleton";
 import { samplingMethodsArray, sizesNormal, sizesNormalArray, sizesXL, sizesXLArray, upscalerMethodsArray } from "@/data/settings";
 import { useDebounce } from "@/lib/hooks";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { APIResponse } from "@/pages/api/generation/get_cost";
+import { APIResponse as GenerateAPIResponse } from "@/pages/api/generation/generate";
+import { GenerationRequest } from "@/types/generation";
+import PreviewBox from "./PreviewBox";
 
 export default function PromptSection() {
 
@@ -56,6 +58,44 @@ export default function PromptSection() {
 		enabled: userIsPremium === false && settings.highPriority
 	});
 
+	const [generationStatus, setGenerationStatus] = useRecoilState(generationStatusState);
+	const [generationToast, setGenerationToast] = useRecoilState(generationToastState);
+
+	const mutation = useMutation({
+		mutationFn: (generation: GenerationRequest): Promise<GenerateAPIResponse> => {
+			return fetchData('/api/generation/generate', generation);
+		},
+		onMutate: () => {
+			setGenerationStatus({
+				id: null,
+				type: null,
+				status: null,
+				data: null,
+			});
+		},
+		onSuccess(data) {
+			if (data.status === 'success') {
+				setGenerationStatus({
+					id: data.data.id,
+					type: data.data.type,
+					data: null,
+					status: 'QUEUED',
+				})
+				setGenerationToast({
+					open: true,
+				})
+			}
+		},
+	})
+
+	useEffect(() => {
+		if ((generationStatus.status === 'COMPLETED' || generationStatus.status === 'FAILED') && generationToast.open) {
+			setGenerationToast({
+				open: false,
+			})
+		}
+	}, []);
+
 	return (
 		<div className="flex flex-col">
 
@@ -74,17 +114,16 @@ export default function PromptSection() {
 				</div>
 
 				<div className="flex-[4] mt-4 lg:mt-12">
-					<Card className="w-full h-[420px] lg:h-full">
-						<CardContent>
-
-						</CardContent>
-					</Card>
+					<PreviewBox mutationData={mutation.data} mutationStatus={mutation.status} isAnonymous={session?.data?.user === undefined} />
 				</div>
 
 			</div>
 
 			<div className="w-full flex gap-2 mt-4 justify-end">
-				<Button className="h-12 text-base grow sm:grow-0 sm:w-[220px] flex items-center gap-1" onClick={()=>{console.log(generation)}}>
+				<Button className="h-12 text-base grow sm:grow-0 sm:w-[220px] flex items-center gap-1" disabled={mutation.isPending || mutation.isError || generationStatus.status === 'PROCESSING' || generationStatus.status === 'QUEUED'} onClick={() => { mutation.mutate(generation) }}>
+					{
+						(mutation.isPending || mutation.isError || generationStatus.status === 'PROCESSING' || generationStatus.status === 'QUEUED') && <IconLoader2 className="mr-[2px] size-5 animate-spin" />
+					}
 					Generate
 					{
 						userIsPremium === false && settings.highPriority &&
@@ -208,9 +247,13 @@ export default function PromptSection() {
 								</div>
 							</div>
 						</div>
-						<div className="mt-2">
-							<h3 className="font-medium line-clamp-1 mb-2 text-sm flex gap-2"><Switch checked={settings.highPriority} onCheckedChange={(checked) => { setSettings((prev) => { return { ...prev, highPriority: checked } }) }} />High Priority</h3>
-						</div>
+						{
+							!userIsPremium &&
+							<div className="mt-2">
+								<h3 className="font-medium line-clamp-1 mb-2 text-sm flex gap-2"><Switch checked={settings.highPriority} onCheckedChange={(checked) => { setSettings((prev) => { return { ...prev, highPriority: checked } }) }} />High Priority</h3>
+							</div>
+						}
+
 					</PopoverContent>
 				</Popover>
 			</div>
