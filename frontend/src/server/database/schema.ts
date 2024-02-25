@@ -77,3 +77,13 @@ export const priorityQueue = pgTable("priorityQueue", {
 	premium: boolean('premium').notNull(),
 	cost: integer('cost').default(0).notNull()
 })
+
+export const images = pgTable("images", {
+	id: uuid('id').notNull().primaryKey(),
+	url: text('url').notNull(),
+	width: integer('width').notNull(),
+	height: integer('height').notNull(),
+	prompt: json('prompt').notNull().$type<GenerationRequest>(),
+	userId: text('userId').notNull().references(() => users.id, { onDelete: "cascade" }),
+	createdAt: timestamp('createdAt', { mode: 'string' }).notNull().defaultNow(),
+})

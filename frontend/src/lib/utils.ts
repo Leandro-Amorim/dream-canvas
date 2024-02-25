@@ -1,6 +1,8 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
+export const NULL_UUID = '00000000-0000-0000-0000-000000000000';
+
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
 }
@@ -12,7 +14,7 @@ export async function fetchData(input: string, body?: unknown) {
 		method: body ? 'POST' : 'GET',
 		body: body ? JSON.stringify(body) : undefined,
 	});
-	
+
 	if (!response.ok) {
 		throw new Error('Network fail');
 	}
@@ -31,4 +33,16 @@ export function parseModifiers(prompt: string) {
 		index[arr[0]] = clamp(index[arr[0]], 0, 2);
 	}
 	return index;
+}
+
+export function downloadImage(url: string) {
+	fetch(url).then(async (resp) => {
+		const buffer = await resp.arrayBuffer();
+		const objectUrl = window.URL.createObjectURL(new Blob([buffer]));
+		const link = document.createElement("a");
+		link.href = objectUrl;
+		link.setAttribute("download", "image.png");
+		document.body.appendChild(link);
+		link.click();
+	}).catch(console.error);
 }

@@ -7,16 +7,51 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { IconCirclePlus, IconCrown, IconX } from "@tabler/icons-react";
 import Image from "next/image";
+import { NextPageContext } from "next";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]";
+import { db } from "@/server/database/database";
+import { images } from "@/server/database/schema";
+import { and, eq, inArray } from "drizzle-orm";
+import isUUID from 'is-uuid';
+import { IImage } from "@/types/database";
 
 const formSchema = z.object({
 	username: z.string().min(2, {
 		message: "Username must be at least 2 characters.",
 	}),
 })
+
+export async function getServerSideProps(context: NextPageContext) {
+
+	//@ts-ignore
+	const session = await getServerSession(context.req, context.res, authOptions);
+
+	if (session?.user === undefined) {
+		return {
+			redirect: {
+				destination: '/api/auth/signin',
+				permanent: false,
+			},
+		}
+	}
+
+	const userId = session.user.id;
+
+	const queryIds = [context.query.id ?? []].flat().filter((value) => { return isUUID.anyNonNil(value) });
+
+	let defaultImages: IImage[] = [];
+	if (queryIds.length > 0) {
+		defaultImages = await db.select().from(images).where(and(eq(images.userId, userId), inArray(images.id, queryIds)))
+	}
+
+	return {
+		props: {},
+	}
+}
 
 export default function CreatePost() {
 
@@ -38,26 +73,26 @@ export default function CreatePost() {
 
 				<div className="flex-1 flex flex-col grow gap-4">
 
-						<div className="w-full grow min-h-[500px] bg-secondary rounded-lg relative overflow-hidden p-4">
-							<Image src={'/test-post.png'} alt="Post" fill={true} className="object-contain" />
+					<div className="w-full grow min-h-[500px] bg-secondary rounded-lg relative overflow-hidden p-4">
+						<Image src={'/test-post.png'} alt="Post" fill={true} className="object-contain" />
+					</div>
+					<div className="w-full h-[120px] bg-secondary rounded-lg p-2 gap-2 flex">
+						<div className="h-full aspect-square rounded-md relative overflow-hidden shrink-0">
+							<Button className="absolute top-1 right-1 z-10 text rounded-full size-5" size={'icon'} variant={"secondary"}><IconX size={14} /></Button>
+							<Image src={'/test-post.png'} alt="Post" fill={true} className="object-cover" />
 						</div>
-						<div className="w-full h-[120px] bg-secondary rounded-lg p-2 gap-2 flex">
-							<div className="h-full aspect-square rounded-md relative overflow-hidden shrink-0">
-								<Button className="absolute top-1 right-1 z-10 text rounded-full size-5" size={'icon'} variant={"secondary"}><IconX size={14} /></Button>
-								<Image src={'/test-post.png'} alt="Post" fill={true} className="object-cover" />
-							</div>
-							<div className="h-full aspect-square rounded-md relative overflow-hidden shrink-0">
-								<Button className="absolute top-1 right-1 z-10 text rounded-full size-5" size={'icon'} variant={"secondary"}><IconX size={14} /></Button>
-								<Image src={'/test-post.png'} alt="Post" fill={true} className="object-cover" />
-							</div>
-							<div className="h-full aspect-square rounded-md relative overflow-hidden shrink-0">
-								<Button className="absolute top-1 right-1 z-10 text rounded-full size-5" size={'icon'} variant={"secondary"}><IconX size={14} /></Button>
-								<Image src={'/test-post.png'} alt="Post" fill={true} className="object-cover" />
-							</div>
-							<div className="h-full aspect-square rounded-md relative overflow-hidden shrink-0 bg-white flex items-center justify-center text-primary border-[3px] border-primary">
-								<IconCirclePlus size={40} />
-							</div>
+						<div className="h-full aspect-square rounded-md relative overflow-hidden shrink-0">
+							<Button className="absolute top-1 right-1 z-10 text rounded-full size-5" size={'icon'} variant={"secondary"}><IconX size={14} /></Button>
+							<Image src={'/test-post.png'} alt="Post" fill={true} className="object-cover" />
 						</div>
+						<div className="h-full aspect-square rounded-md relative overflow-hidden shrink-0">
+							<Button className="absolute top-1 right-1 z-10 text rounded-full size-5" size={'icon'} variant={"secondary"}><IconX size={14} /></Button>
+							<Image src={'/test-post.png'} alt="Post" fill={true} className="object-cover" />
+						</div>
+						<div className="h-full aspect-square rounded-md relative overflow-hidden shrink-0 bg-white flex items-center justify-center text-primary border-[3px] border-primary">
+							<IconCirclePlus size={40} />
+						</div>
+					</div>
 
 				</div>
 

@@ -1,4 +1,6 @@
 import "@/styles/globals.css";
+import 'react-photo-view/dist/react-photo-view.css';
+
 import type { AppProps } from "next/app";
 import { ThemeProvider } from "@/components/layout/ThemeProvider"
 import { SessionProvider } from "next-auth/react";
