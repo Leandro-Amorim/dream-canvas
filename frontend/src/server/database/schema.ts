@@ -1,4 +1,4 @@
-import { timestamp, pgTable, text, primaryKey, integer, boolean, uuid, json } from "drizzle-orm/pg-core";
+import { timestamp, pgTable, text, primaryKey, integer, boolean, uuid, json, varchar } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from '@auth/core/adapters';
 import { GenerationRequest } from "@/types/generation";
 
@@ -87,3 +87,28 @@ export const images = pgTable("images", {
 	userId: text('userId').notNull().references(() => users.id, { onDelete: "cascade" }),
 	createdAt: timestamp('createdAt', { mode: 'string' }).notNull().defaultNow(),
 })
+
+export const posts = pgTable("posts", {
+	id: varchar('id', { length: 64 }).notNull().primaryKey(),
+
+	title: text('title').notNull().default(''),
+	description: text('description').notNull().default(''),
+
+	anonymous: boolean('anonymous').notNull().default(false),
+	hidePrompt: boolean('hidePrompt').notNull().default(false),
+
+	userId: text('userId').notNull().references(() => users.id, { onDelete: "cascade" }),
+	createdAt: timestamp('createdAt', { mode: 'string' }).notNull().defaultNow(),
+});
+
+export const postImages = pgTable("postImages", {
+	postId: varchar('postId', { length: 64 }).notNull().references(() => posts.id, { onDelete: "cascade" }),
+	imageId: uuid('imageId').notNull().references(() => images.id, { onDelete: "cascade" }),
+
+	order: integer('order').notNull().default(0),
+},
+	(row) => ({
+		compoundKey: primaryKey({ columns: [row.postId, row.imageId] }),
+	})
+);
+
