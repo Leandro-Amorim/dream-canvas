@@ -11,7 +11,7 @@ export default async function protectAPI(req: NextApiRequest, res: NextApiRespon
 	if (req.method !== method) {
 		const resp: GenericAPIResponse<null> = {
 			status: 'error',
-			reason: 'Method not allowed',
+			reason: 'METHOD_NOT_ALLOWED',
 		};
 		res.status(405).json(resp);
 		error = true;
@@ -19,7 +19,7 @@ export default async function protectAPI(req: NextApiRequest, res: NextApiRespon
 	else if (auth && session?.user === undefined) {
 		const resp: GenericAPIResponse<null> = {
 			status: 'error',
-			reason: 'Not authorized',
+			reason: 'NOT_AUTHORIZED',
 		}
 		res.status(401).json(resp);
 		error = true;

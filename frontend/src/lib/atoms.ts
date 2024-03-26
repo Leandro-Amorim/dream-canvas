@@ -62,3 +62,30 @@ export const generationToastState = atom({
 		open: false,
 	}
 })
+
+export const signinModalOpenState = atom({ key: 'signinModalOpenState', default: false });
+
+export const blockUserModalState = atom({
+	key: 'blockUserModalState', default: {
+		open: false,
+		mode: 'post' as 'post' | 'user',
+		userId: null as null | string,
+		postId: null as null | string,
+		onSuccess: (() => {}) as () => void
+	}
+});
+
+export const reportModalState = atom({
+	key: 'reportModalState', default: {
+		open: false,
+		postId: null as null | string,
+	}
+});
+
+export const deletePostModalState = atom({
+	key: 'deletePostModalState', default: {
+		open: false,
+		postId: null as null | string,
+		onSuccess: (() => {}) as () => void
+	}
+});

@@ -1,6 +1,7 @@
 import { timestamp, pgTable, text, primaryKey, integer, boolean, uuid, json, varchar } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from '@auth/core/adapters';
 import { GenerationRequest } from "@/types/generation";
+import { ReportType } from "@/types/database";
 
 export const accounts = pgTable("account", {
 	userId: text("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
@@ -96,8 +97,9 @@ export const posts = pgTable("posts", {
 
 	anonymous: boolean('anonymous').notNull().default(false),
 	hidePrompt: boolean('hidePrompt').notNull().default(false),
+	orphan: boolean('orphan').notNull().default(false),
 
-	userId: text('userId').notNull().references(() => users.id, { onDelete: "cascade" }),
+	authorId: text('authorId').references(() => users.id, { onDelete: "cascade" }),
 	createdAt: timestamp('createdAt', { mode: 'string' }).notNull().defaultNow(),
 });
 
@@ -112,3 +114,51 @@ export const postImages = pgTable("postImages", {
 	})
 );
 
+export const postLikes = pgTable("postLikes", {
+	postId: varchar('postId', { length: 64 }).notNull().references(() => posts.id, { onDelete: "cascade" }),
+	userId: varchar('userId', { length: 64 }).notNull().references(() => users.id, { onDelete: "cascade" }),
+	likedAt: timestamp('likedAt', { mode: 'string' }).notNull().defaultNow(),
+},
+	(row) => ({
+		compoundKey: primaryKey({ columns: [row.postId, row.userId] }),
+	})
+);
+
+export const postSaves = pgTable("postSaves", {
+	postId: varchar('postId', { length: 64 }).notNull().references(() => posts.id, { onDelete: "cascade" }),
+	userId: varchar('userId', { length: 64 }).notNull().references(() => users.id, { onDelete: "cascade" }),
+	savedAt: timestamp('savedAt', { mode: 'string' }).notNull().defaultNow(),
+},
+	(row) => ({
+		compoundKey: primaryKey({ columns: [row.postId, row.userId] }),
+	})
+);
+
+export const blocks = pgTable("blocks", {
+	userId: varchar('userId', { length: 64 }).notNull().references(() => users.id, { onDelete: "cascade" }),
+	blockedId: varchar('blockedId', { length: 64 }).notNull().references(() => users.id, { onDelete: "cascade" }),
+	hidden: boolean('hidden').notNull().default(false),
+	blockedAt: timestamp('blockedAt', { mode: 'string' }).notNull().defaultNow(),
+},
+	(row) => ({
+		compoundKey: primaryKey({ columns: [row.userId, row.blockedId] }),
+	})
+);
+
+export const follows = pgTable("follows", {
+	userId: varchar('userId', { length: 64 }).notNull().references(() => users.id, { onDelete: "cascade" }),
+	followerId: varchar('followerId', { length: 64 }).notNull().references(() => users.id, { onDelete: "cascade" }),
+	followedAt: timestamp('followedAt', { mode: 'string' }).notNull().defaultNow(),
+},
+	(row) => ({
+		compoundKey: primaryKey({ columns: [row.userId, row.followerId] }),
+	})
+);
+
+export const reports = pgTable("reports", {
+	reportId: uuid('reportId').notNull().primaryKey().defaultRandom(),
+	postId: varchar('postId', { length: 64 }).notNull().references(() => posts.id, { onDelete: "cascade" }),
+	userId: varchar('userId', { length: 64 }).notNull().references(() => users.id, { onDelete: "cascade" }),
+	reason: text('reason').notNull().$type<ReportType>(),
+	reportedAt: timestamp('reportedAt', { mode: 'string' }).notNull().defaultNow(),
+});

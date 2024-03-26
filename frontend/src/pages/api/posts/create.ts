@@ -34,11 +34,11 @@ export default async function handler(req: APIRequest<RequestBody>, res: NextApi
 		await db.transaction(async (tx) => {
 			await tx.insert(posts).values({
 				id: postId,
-				userId,
+				authorId: userId,
 				title: formData.title,
 				description: formData.description,
 				anonymous: formData.anonymousPost,
-				hidePrompt: formData.hidePrompt
+				hidePrompt: formData.hidePrompt,
 			});
 			await tx.insert(postImages).values(req.body.images.map((image, index) => {
 				return {

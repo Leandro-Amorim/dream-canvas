@@ -2,6 +2,8 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "@/server/database/database";
 import EmailProvider from "next-auth/providers/email";
+import GoogleProvider from "next-auth/providers/google";
+import GithubProvider from "next-auth/providers/github";
 import { accounts, sessions, users, verificationTokens } from "@/server/database/schema";
 
 
@@ -34,6 +36,14 @@ export const authOptions: NextAuthOptions = {
 				},
 			},
 			from: process.env.EMAIL_FROM,
+		}),
+		GoogleProvider({
+			clientId: process.env.GOOGLE_CLIENT_ID ?? '',
+			clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
+		}),
+		GithubProvider({
+			clientId: process.env.GITHUB_CLIENT_ID ?? '',
+			clientSecret: process.env.GITHUB_CLIENT_SECRET ?? '',
 		})
 	],
 	callbacks: {
@@ -44,6 +54,9 @@ export const authOptions: NextAuthOptions = {
 			return session;
 		}
 	},
+	pages:{
+		//'signIn': '/auth/signin'
+	}
 };
 
 export default NextAuth(authOptions);
