@@ -1,4 +1,4 @@
-import { timestamp, pgTable, text, primaryKey, integer, boolean, uuid, json, varchar } from "drizzle-orm/pg-core";
+import { timestamp, pgTable, text, primaryKey, integer, boolean, uuid, json, varchar, AnyPgColumn } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from '@auth/core/adapters';
 import { GenerationRequest } from "@/types/generation";
 import { ReportType } from "@/types/database";
@@ -162,3 +162,32 @@ export const reports = pgTable("reports", {
 	reason: text('reason').notNull().$type<ReportType>(),
 	reportedAt: timestamp('reportedAt', { mode: 'string' }).notNull().defaultNow(),
 });
+
+export const comments = pgTable("comments", {
+	id: uuid('id').notNull().primaryKey().defaultRandom(),
+	postId: varchar('postId', { length: 64 }).notNull().references(() => posts.id, { onDelete: "cascade" }),
+	authorId: varchar('authorId', { length: 64 }).notNull().references(() => users.id, { onDelete: "cascade" }),
+	message: text('message').notNull(),
+	replyingTo: uuid('replyingTo').references((): AnyPgColumn => comments.id, { onDelete: "cascade" }),
+	createdAt: timestamp('createdAt', { mode: 'string' }).notNull().defaultNow(),
+});
+
+export const commentLikes = pgTable("commentLikes", {
+	commentId: uuid('commentId').notNull().references(() => comments.id, { onDelete: "cascade" }),
+	userId: varchar('userId', { length: 64 }).notNull().references(() => users.id, { onDelete: "cascade" }),
+	likedAt: timestamp('likedAt', { mode: 'string' }).notNull().defaultNow(),
+},
+	(row) => ({
+		compoundKey: primaryKey({ columns: [row.commentId, row.userId] }),
+	})
+);
+
+export const commentSubscriptions = pgTable("commentSubscriptions", {
+	commentId: uuid('commentId').notNull().references(() => comments.id, { onDelete: "cascade" }),
+	userId: varchar('userId', { length: 64 }).notNull().references(() => users.id, { onDelete: "cascade" }),
+	subscribedAt: timestamp('subscribedAt', { mode: 'string' }).notNull().defaultNow(),
+},
+	(row) => ({
+		compoundKey: primaryKey({ columns: [row.commentId, row.userId] }),
+	})
+);

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { IconFilter, IconLoader2, IconSearch } from "@tabler/icons-react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 import { APIResponse } from "./api/posts/get-posts";
 import { fetchData } from "@/lib/utils";
@@ -14,6 +14,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import InfiniteScroll from "react-infinite-scroller";
 import { useDebounce } from "@/lib/hooks";
 import { modelArray } from "@/data/models";
+import { useRouter } from "next/router";
 
 export default function Explore() {
 
@@ -23,6 +24,49 @@ export default function Explore() {
 	const [model, setModel] = useState('all');
 	const [content, setContent] = useState('all' as 'all' | 'only_posts');
 	const [timeframe, setTimeframe] = useState('all' as 'day' | 'week' | 'month' | 'year' | 'all');
+
+	const router = useRouter();
+	useEffect(() => {
+		if (router.query['search']) {
+			setSearch(router.query['search'] as string);
+		}
+		if (router.query['mode']) {
+			setMode(router.query['mode'] as 'new' | 'popular' | 'following');
+		}
+		if (router.query['model']) {
+			setModel(router.query['model'] as string);
+		}
+		if (router.query['content']) {
+			setContent(router.query['content'] as 'all' | 'only_posts');
+		}
+		if (router.query['timeframe']) {
+			setTimeframe(router.query['timeframe'] as 'day' | 'week' | 'month' | 'year' | 'all');
+		}
+	}, [router.query]);
+
+	useEffect(() => {
+		const queryParams = [];
+		if (debouncedSearch) {
+			queryParams.push(`search=${debouncedSearch}`);
+		}
+		if (mode !== 'new') {
+			queryParams.push(`mode=${mode}`);
+		}
+		if (model !== 'all') {
+			queryParams.push(`model=${model}`);
+		}
+		if (content !== 'all') {
+			queryParams.push(`content=${content}`);
+		}
+		if (timeframe !== 'all') {
+			queryParams.push(`timeframe=${timeframe}`);
+		}
+		history.replaceState({}, '',
+			queryParams.length > 0 ?
+				`explore?${queryParams.join('&')}`
+				: 'explore'
+		);
+	}, [debouncedSearch, mode, model, content, timeframe]);
 
 	const fetchPosts = useCallback(async ({ pageParam }: { pageParam?: { id: string, likeCount: number, createdAt: string } }): Promise<APIResponse> => {
 		return await fetchData('/api/posts/get-posts', {

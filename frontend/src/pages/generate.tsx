@@ -11,7 +11,7 @@ import { IImage } from "@/types/database";
 import { db } from "@/server/database/database";
 import { and, eq } from "drizzle-orm";
 import { NULL_UUID } from "@/lib/utils";
-import { images } from "@/server/database/schema";
+import { images, postImages, posts } from "@/server/database/schema";
 import { useEffect, useMemo } from "react";
 import { useSetRecoilState } from "recoil";
 import { modelState, modelTypeState, negativePromptState, promptState, settingsState } from "@/lib/atoms";
@@ -27,13 +27,33 @@ export async function getServerSideProps(context: NextPageContext) {
 	const postId = Array.isArray(context.query.postId) ? context.query.postId[0] : context.query.postId ?? '';
 	const imageId = Array.isArray(context.query.imageId) ? context.query.imageId[0] : context.query.imageId ?? '';
 
-	let templateImage = null as IImage | null;
+	let templateImage = null as Omit<IImage, 'userId'> | null;
 
 	if (postId && imageId && isUUID.anyNonNil(imageId)) {
-		//TODO
+		templateImage = (await db.select({
+			id: images.id,
+			url: images.url,
+			height: images.height,
+			width: images.width,
+			prompt: images.prompt,
+			createdAt: images.createdAt
+		}).from(images)
+			.leftJoin(postImages, eq(postImages.imageId, images.id))
+			.leftJoin(posts, eq(posts.id, postImages.postId))
+			.where(
+				and(
+					eq(posts.id, postId),
+					eq(images.id, imageId),
+					eq(posts.hidePrompt, false),
+				)
+			)
+			.limit(1)).at(0) ?? null;
 	}
 	else if (imageId && isUUID.anyNonNil(imageId)) {
 		templateImage = await db.query.images.findFirst({
+			columns: {
+				userId: false,
+			},
 			where: and(eq(images.userId, userId), eq(images.id, imageId))
 		}) ?? null;
 	}
@@ -45,7 +65,7 @@ export async function getServerSideProps(context: NextPageContext) {
 	}
 }
 
-export default function Home({ templateImage }: { templateImage: IImage | null }) {
+export default function Home({ templateImage }: { templateImage: Omit<IImage, 'userId'> | null }) {
 
 	const session = useSession();
 	const userIsPremium = useMemo(() => {
@@ -92,7 +112,7 @@ export default function Home({ templateImage }: { templateImage: IImage | null }
 			setModelType(selectedModel?.type ?? null);
 		}
 	}, [templateImage, userIsPremium, setModel, setModelType, setPrompt, setNegativePrompt, setSettings]);
-	
+
 	return (
 		<Main>
 			<ModifierModal />

@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { downloadImage } from "@/lib/utils";
 import { DateTime } from "luxon";
+import { models } from "@/data/models";
 
 export default function HistoryCardList({ image, selected, setSelected, onDelete }: { image: IImage, selected: string[], setSelected: Dispatch<SetStateAction<string[]>>, onDelete: (imageId?: string) => void }) {
 
@@ -53,7 +54,7 @@ export default function HistoryCardList({ image, selected, setSelected, onDelete
 					<div className="w-full flex justify-between shrink-0">
 
 						<div className="flex flex-col grow">
-							<h4 className="font-medium text-base line-clamp-1">{image.prompt.model}</h4>
+							<h4 className="font-medium text-base line-clamp-1">{(models[image.prompt.model ?? ''])?.name ?? image.prompt.model}</h4>
 							<h4 className="font-medium text-xs text-muted-foreground line-clamp-1">{DateTime.fromSQL(image.createdAt).toRelative({ locale: 'en' })}</h4>
 						</div>
 
@@ -64,7 +65,7 @@ export default function HistoryCardList({ image, selected, setSelected, onDelete
 								<DropdownMenuContent>
 									<DropdownMenuItem className="cursor-pointer flex items-center gap-1" onClick={() => { downloadImage(image.url) }}><IconDownload size={16} /> Download</DropdownMenuItem>
 									<DropdownMenuItem className="cursor-pointer flex items-center gap-1" onClick={() => { router.push(`/generate?imageId=${image.id}`) }}><IconPhotoEdit size={16} /> Use prompt</DropdownMenuItem>
-									<DropdownMenuItem className="!text-red-500 bg-red-50 hover:!bg-red-100 cursor-pointer flex items-center gap-1" onClick={() => { onDelete(image.id) }}><IconTrash size={16} /> Delete</DropdownMenuItem>
+									<DropdownMenuItem className="!text-red-500 cursor-pointer flex items-center gap-1" onClick={() => { onDelete(image.id) }}><IconTrash size={16} /> Delete</DropdownMenuItem>
 								</DropdownMenuContent>
 							</DropdownMenu>
 						</div>

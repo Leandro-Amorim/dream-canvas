@@ -11,7 +11,7 @@ import { useSession } from "next-auth/react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useSetRecoilState } from "recoil";
-import { blockUserModalState, deletePostModalState, reportModalState, signinModalOpenState } from "@/lib/atoms";
+import { blockUserModalState, deletePostModalState, postModalState, reportModalState, signinModalOpenState } from "@/lib/atoms";
 import { fetchData } from "@/lib/utils";
 
 export default function ExploreCard({ post, refetchFn }: { post: IPostCard, refetchFn: () => void }) {
@@ -134,7 +134,6 @@ export default function ExploreCard({ post, refetchFn }: { post: IPostCard, refe
 		setLiked(post.likedByMe);
 	}, [post.likedByMe]);
 
-
 	const { mutate: likePostMutation, isPending: likePostPending } = useMutation({
 		mutationFn: async (data: { postId: string, like: boolean }) => {
 			return fetchData('/api/posts/like', data);
@@ -175,8 +174,21 @@ export default function ExploreCard({ post, refetchFn }: { post: IPostCard, refe
 		return post.likeCount;
 	}, [liked, post.likeCount, post.likedByMe]);
 
+	const setPostModal = useSetRecoilState(postModalState);
+	const openModal = useCallback(() => {
+		history.pushState({}, '', `/posts/${post.id}`);
+		setPostModal((prev) => {
+			return {
+				...prev,
+				open: true,
+				postId: post.id,
+				onDirty: refetchFn,
+			}
+		})
+	}, [post.id, setPostModal, refetchFn]);
+
 	return (
-		<div className="w-full flex flex-col select-none">
+		<div className="w-full flex flex-col select-none" onClick={openModal}>
 
 			<div className="w-full relative rounded-md overflow-hidden cursor-pointer bg-gray-900" style={{ aspectRatio: `${post.imageWidth ?? 2}/${post.imageHeight ?? 3}` }}>
 				<Image src={post.imageUrl} fill={true} alt={post.title || post.id} className={`object-cover transition-all ${(hover || optionsOpen) && 'scale-105'}`} />
@@ -210,15 +222,15 @@ export default function ExploreCard({ post, refetchFn }: { post: IPostCard, refe
 								<DropdownMenuSeparator />
 								{
 									!isOwner &&
-									<DropdownMenuItem className="!text-red-500 bg-red-50 hover:!bg-red-100 cursor-pointer flex items-center gap-1" onClick={openBlockModal}><IconUserCancel size={16} /> Block user</DropdownMenuItem>
+									<DropdownMenuItem className="!text-red-500 cursor-pointer flex items-center gap-1" onClick={openBlockModal}><IconUserCancel size={16} /> Block user</DropdownMenuItem>
 								}
 								{
 									!isOwner &&
-									<DropdownMenuItem className="!text-red-500 bg-red-50 hover:!bg-red-100 cursor-pointer flex items-center gap-1" onClick={openReportModal}><IconFlag size={16} /> Report post</DropdownMenuItem>
+									<DropdownMenuItem className="!text-red-500 cursor-pointer flex items-center gap-1" onClick={openReportModal}><IconFlag size={16} /> Report post</DropdownMenuItem>
 								}
 								{
 									!post.orphan && isOwner &&
-									<DropdownMenuItem className="!text-red-500 bg-red-50 hover:!bg-red-100 cursor-pointer flex items-center gap-1" onClick={openDeleteModal}><IconTrash size={16} /> Delete post</DropdownMenuItem>
+									<DropdownMenuItem className="!text-red-500 cursor-pointer flex items-center gap-1" onClick={openDeleteModal}><IconTrash size={16} /> Delete post</DropdownMenuItem>
 								}
 							</DropdownMenuContent>
 						</DropdownMenuPortal>

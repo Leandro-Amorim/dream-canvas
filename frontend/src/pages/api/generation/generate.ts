@@ -30,6 +30,10 @@ interface APIRequest extends NextApiRequest {
 
 export default async function handler(req: APIRequest, res: NextApiResponse) {
 	try {
+		if (req.body.settings.seed === -1) {
+			req.body.settings.seed = Math.floor(Math.random() * 1000000000);
+		}
+
 		const session = await getServerSession(req, res, authOptions);
 		let role = 'anonymous';
 		if (session?.user) {
@@ -100,7 +104,7 @@ export default async function handler(req: APIRequest, res: NextApiResponse) {
 				}
 				else {
 					const remainingGenerations = (await db.query.users.findFirst({ where: eq(users.id, userId) }))?.generations ?? 0;
-					
+
 					if (remainingGenerations <= 0) {
 						return res.status(200).json({
 							status: 'error',

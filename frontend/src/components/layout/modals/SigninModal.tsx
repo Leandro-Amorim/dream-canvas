@@ -23,10 +23,6 @@ export default function SigninModal() {
 		}
 	})
 
-	useEffect(() => {
-		console.log(providers)
-	}, [providers])
-
 	const icons = {
 		'google': 'https://authjs.dev/img/providers/google.svg',
 		'github': 'https://authjs.dev/img/providers/github-dark.svg',

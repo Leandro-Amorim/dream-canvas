@@ -3,7 +3,7 @@ import protectAPI from '@/server/protectAPI';
 import { APIRequest, GenericAPIResponse } from '@/types/api';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]';
-import { blocks, follows, images, postImages, postLikes, postSaves, posts, users } from '@/server/database/schema';
+import { blocks, comments, follows, images, postImages, postLikes, postSaves, posts, users } from '@/server/database/schema';
 import { db } from '@/server/database/database';
 import { SQL, and, asc, desc, eq, exists, gt, gte, ilike, lt, notExists, or, sql } from 'drizzle-orm';
 import { IPostCard } from '@/types/database';
@@ -34,6 +34,15 @@ export default async function handler(req: APIRequest<RequestBody>, res: NextApi
 		const cursorFilters: (SQL | undefined)[] = [];
 
 		if (req.body.search) {
+
+			if (req.body.search.length < 3)
+			{
+				return res.status(200).json({
+					status: 'success',
+					data: [],
+				} satisfies APIResponse);
+			}
+
 			filters.push(
 				or(
 					ilike(posts.title, '%' + req.body.search + '%'),
@@ -58,7 +67,7 @@ export default async function handler(req: APIRequest<RequestBody>, res: NextApi
 						.where(
 							and(
 								eq(postImages.postId, posts.id),
-								eq(sql`${images.prompt}->>'prompt'`, req.body.model)
+								eq(sql`${images.prompt}->>'model'`, req.body.model)
 							)
 						)
 				)
@@ -123,7 +132,7 @@ export default async function handler(req: APIRequest<RequestBody>, res: NextApi
 					savedByMe: sql<boolean>`EXISTS(SELECT 1 from ${postSaves} where ${postSaves.postId} = ${posts.id} and ${postSaves.userId} = ${userId})`.as('savedByMe'),
 					likeCount: sql<number>`(SELECT count(*) from ${postLikes} where ${postLikes.postId} = ${posts.id})::integer`.as('likeCount'),
 					likedByMe: sql<boolean>`EXISTS(SELECT 1 from ${postLikes} where ${postLikes.postId} = ${posts.id} and ${postLikes.userId} = ${userId})`.as('likedByMe'),
-					commentCount: sql<number>`0`.as('commentCount'),
+					commentCount: sql<number>`(SELECT count(*) from ${comments} where ${comments.postId} = ${posts.id})::integer`.as('commentCount'),
 				}
 			).from(posts)
 				.leftJoin(users, eq(posts.authorId, users.id))

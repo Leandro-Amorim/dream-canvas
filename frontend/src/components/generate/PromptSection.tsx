@@ -210,7 +210,7 @@ export default function PromptSection() {
 								<div className="flex-1">
 									<h3 className="font-medium line-clamp-1 mb-2 text-sm">Upscaler</h3>
 									<Select value={settings.hires.upscaler} onValueChange={(val) => { setSettings((prev) => { return { ...prev, hires: { ...prev.hires, upscaler: val } } }) }}>
-										<SelectTrigger className="bg-white">
+										<SelectTrigger className="bg-background">
 											<SelectValue />
 										</SelectTrigger>
 										<SelectContent>
@@ -226,7 +226,7 @@ export default function PromptSection() {
 									<h3 className="font-medium line-clamp-1 mb-2 text-sm">Upscaling Factor</h3>
 									<div className="flex gap-2">
 										<Slider min={1} max={2} step={0.1} value={[settings.hires.factor]} onValueChange={(val) => { setSettings((prev) => { return { ...prev, hires: { ...prev.hires, factor: val[0] } } }) }} />
-										<Input className="basis-24 bg-white" type="number" min={1} max={2} step={0.1} value={settings.hires.factor} onChange={(e) => { setSettings((prev) => { return { ...prev, hires: { ...prev.hires, factor: e.target.valueAsNumber } } }) }} />
+										<Input className="basis-24 bg-background" type="number" min={1} max={2} step={0.1} value={settings.hires.factor} onChange={(e) => { setSettings((prev) => { return { ...prev, hires: { ...prev.hires, factor: e.target.valueAsNumber } } }) }} />
 									</div>
 								</div>
 							</div>
@@ -235,14 +235,14 @@ export default function PromptSection() {
 									<h3 className="font-medium line-clamp-1 mb-2 text-sm">Hires Steps</h3>
 									<div className="flex gap-2">
 										<Slider min={1} max={50} step={1} value={[settings.hires.steps]} onValueChange={(val) => { setSettings((prev) => { return { ...prev, hires: { ...prev.hires, steps: val[0] } } }) }} />
-										<Input className="basis-24 bg-white" type="number" min={1} max={50} step={1} value={settings.hires.steps} onChange={(e) => { setSettings((prev) => { return { ...prev, hires: { ...prev.hires, steps: e.target.valueAsNumber } } }) }} />
+										<Input className="basis-24 bg-background" type="number" min={1} max={50} step={1} value={settings.hires.steps} onChange={(e) => { setSettings((prev) => { return { ...prev, hires: { ...prev.hires, steps: e.target.valueAsNumber } } }) }} />
 									</div>
 								</div>
 								<div className="flex-1">
 									<h3 className="font-medium line-clamp-1 mb-2 text-sm">Denoising Strength</h3>
 									<div className="flex gap-2">
 										<Slider min={0} max={1} step={0.01} value={[settings.hires.denoisingStrength]} onValueChange={(val) => { setSettings((prev) => { return { ...prev, hires: { ...prev.hires, denoisingStrength: val[0] } } }) }} />
-										<Input className="basis-24 bg-white" type="number" min={0} max={1} step={0.01} value={settings.hires.denoisingStrength} onChange={(e) => { setSettings((prev) => { return { ...prev, hires: { ...prev.hires, denoisingStrength: e.target.valueAsNumber } } }) }} />
+										<Input className="basis-24 bg-background" type="number" min={0} max={1} step={0.01} value={settings.hires.denoisingStrength} onChange={(e) => { setSettings((prev) => { return { ...prev, hires: { ...prev.hires, denoisingStrength: e.target.valueAsNumber } } }) }} />
 									</div>
 								</div>
 							</div>

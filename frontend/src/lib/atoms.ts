@@ -71,7 +71,7 @@ export const blockUserModalState = atom({
 		mode: 'post' as 'post' | 'user',
 		userId: null as null | string,
 		postId: null as null | string,
-		onSuccess: (() => {}) as () => void
+		onSuccess: (() => { }) as () => void
 	}
 });
 
@@ -86,6 +86,23 @@ export const deletePostModalState = atom({
 	key: 'deletePostModalState', default: {
 		open: false,
 		postId: null as null | string,
-		onSuccess: (() => {}) as () => void
+		onSuccess: (() => { }) as () => void
 	}
 });
+
+export const postModalState = atom({
+	key: 'postModalState', default: {
+		open: false,
+		postId: null as null | string,
+		onDirty: (() => { }) as () => void
+	}
+})
+
+export const sharePostModalState = atom({
+	key: 'sharePostModalState', default: {
+		open: false,
+		postId: null as null | string,
+		postTitle: '',
+		imageUrl: '',
+	}
+})
