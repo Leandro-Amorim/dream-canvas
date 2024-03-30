@@ -98,11 +98,12 @@ export const postModalState = atom({
 	}
 })
 
-export const sharePostModalState = atom({
-	key: 'sharePostModalState', default: {
+export const shareModalState = atom({
+	key: 'shareModalState', default: {
 		open: false,
-		postId: null as null | string,
-		postTitle: '',
+		mode: 'post' as 'post' | 'profile',
+		id: null as null | string,
+		title: '',
 		imageUrl: '',
 	}
 })

@@ -73,3 +73,27 @@ export interface IComment {
 	likedByMe: boolean,
 	subscribedByMe: boolean,
 }
+
+export interface IProfile {
+	id: string,
+	name: string,
+	description: string,
+	image: string,
+	coverImage: string,
+	followersCount: number,
+	followingCount: number,
+	postsCount: number,
+	savedPostsCount: number,
+	followedByMe: boolean,
+	blockedByMe: boolean,
+}
+
+export interface IProfileCard {
+	id: string,
+	name: string,
+	image: string,
+	postImages: string[],
+	followedByMe: boolean,
+	blockedByMe: boolean,
+	followedAt: string
+}

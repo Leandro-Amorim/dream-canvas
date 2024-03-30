@@ -5,7 +5,7 @@ import { useSetRecoilState } from "recoil";
 import { useMutation } from "@tanstack/react-query";
 import { fetchData } from "@/lib/utils";
 import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
-import { blockUserModalState, deletePostModalState, reportModalState, sharePostModalState, signinModalOpenState } from "@/lib/atoms";
+import { blockUserModalState, deletePostModalState, reportModalState, shareModalState, signinModalOpenState } from "@/lib/atoms";
 import { toast } from "sonner";
 import Image from "next/image";
 import Link from "next/link";
@@ -207,14 +207,15 @@ export default function PostContent({ post, setDirty, onCancel, refetchPost }: {
 		return post?.images[imageIndex] ?? null;
 	}, [post, imageIndex]);
 
-	const setShareModal = useSetRecoilState(sharePostModalState);
+	const setShareModal = useSetRecoilState(shareModalState);
 	const sharePost = useCallback(() => {
 		setShareModal((prev) => {
 			return {
 				...prev,
+				mode: 'post',
 				open: true,
-				postId: post?.id ?? '',
-				postTitle: post?.title ?? '',
+				id: post?.id ?? '',
+				title: post?.title ?? '',
 				imageUrl: selectedImage?.url ?? '',
 			}
 		})

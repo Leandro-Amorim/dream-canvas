@@ -39,10 +39,12 @@ export const verificationTokens = pgTable("verificationToken", {
 
 export const users = pgTable("user", {
 	id: text("id").notNull().primaryKey(),
-	name: text("name"),
+	name: text("name").notNull().default(''),
+	description: text("description").notNull().default(''),
 	email: text("email").notNull(),
 	emailVerified: timestamp("emailVerified", { mode: "date" }),
-	image: text("image"),
+	image: text("image").notNull().default(''),
+	coverImage: text("coverImage").notNull().default(''),
 	premium: boolean("premium").notNull().default(false),
 	premiumCredits: integer("premiumCredits").notNull().default(Number(process.env.DAILY_PREMIUM_CREDITS ?? 50)),
 	generations: integer("generations").notNull().default(Number(process.env.DAILY_FREE_USER_GENERATIONS ?? 25)),

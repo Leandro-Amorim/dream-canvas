@@ -13,9 +13,11 @@ import { toast } from "sonner";
 import { useSetRecoilState } from "recoil";
 import { blockUserModalState, deletePostModalState, postModalState, reportModalState, signinModalOpenState } from "@/lib/atoms";
 import { fetchData } from "@/lib/utils";
+import { useRouter } from "next/router";
 
 export default function ExploreCard({ post, refetchFn }: { post: IPostCard, refetchFn: () => void }) {
 
+	const router = useRouter();
 	const session = useSession();
 	const userId = session.data?.user.id ?? null;
 	const isOwner = post.author.id !== null && post.author.id === userId;
@@ -188,9 +190,9 @@ export default function ExploreCard({ post, refetchFn }: { post: IPostCard, refe
 	}, [post.id, setPostModal, refetchFn]);
 
 	return (
-		<div className="w-full flex flex-col select-none" onClick={openModal}>
+		<div className="w-full flex flex-col select-none">
 
-			<div className="w-full relative rounded-md overflow-hidden cursor-pointer bg-gray-900" style={{ aspectRatio: `${post.imageWidth ?? 2}/${post.imageHeight ?? 3}` }}>
+			<div className="w-full relative rounded-md overflow-hidden cursor-pointer bg-gray-900" style={{ aspectRatio: `${post.imageWidth ?? 2}/${post.imageHeight ?? 3}` }} onClick={openModal}>
 				<Image src={post.imageUrl} fill={true} alt={post.title || post.id} className={`object-cover transition-all ${(hover || optionsOpen) && 'scale-105'}`} />
 				{
 					post.imageCount > 1 &&
@@ -243,7 +245,9 @@ export default function ExploreCard({ post, refetchFn }: { post: IPostCard, refe
 			<div className="w-full flex items-center mt-2 justify-between">
 				{
 					!post.orphan ?
-						<Link href={'/profiles/' + post.author.id} className={post.anonymous ? 'pointer-events-none' : ''} aria-disabled={post.anonymous} tabIndex={post.anonymous ? -1 : undefined}>
+						<Link href={'/profiles/' + post.author.id} className={post.anonymous || router.pathname === '/profiles/[id]' ? 'pointer-events-none' : ''}
+							aria-disabled={post.anonymous || router.pathname === '/profiles/[id]'}
+							tabIndex={post.anonymous || router.pathname === '/profiles/[id]' ? -1 : undefined}>
 							<div className={`flex items-center`}>
 								<Avatar className="size-7">
 									<AvatarImage className="object-cover" src={post.author.avatar && !post.anonymous ? post.author.avatar : ''} alt={post.author.name ?? 'User'} />

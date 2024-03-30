@@ -107,7 +107,6 @@ export default function Explore() {
 
 	return (
 		<Main>
-			<PostModal />
 			<div className="flex flex-col mt-8 lg:mt-16 items-center">
 
 				<div className="w-full md:max-w-[600px] relative">

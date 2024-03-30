@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { sharePostModalState } from "@/lib/atoms";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { shareModalState } from "@/lib/atoms";
+import { useCallback, useEffect, useState } from "react";
 import { useRecoilState } from "recoil"
 import { toast } from "sonner";
 import {
@@ -20,16 +20,16 @@ import {
 } from "react-share";
 
 export default function SharePostModal() {
-	const [modal, setModal] = useRecoilState(sharePostModalState);
+	const [modal, setModal] = useRecoilState(shareModalState);
 
 	const onCancel = useCallback(() => {
 		setModal((prev) => {
 			return {
 				...prev,
 				open: false,
-				postId: null,
+				id: null,
 				imageUrl: '',
-				postTitle: '',
+				title: '',
 			}
 		});
 	}, [setModal]);
@@ -37,8 +37,14 @@ export default function SharePostModal() {
 	const [postUrl, setPostUrl] = useState('');
 
 	useEffect(() => {
-		setPostUrl(window.location.origin + '/posts/' + modal.postId);
-	}, [modal.postId]);
+		if (modal.mode == 'post') {
+			setPostUrl(window.location.origin + '/posts/' + modal.id);
+		}
+		else
+		{
+			setPostUrl(window.location.origin + '/profiles/' + modal.id);
+		}
+	}, [modal.mode, modal.id]);
 
 	const copyLink = useCallback(() => {
 		navigator.clipboard.writeText(postUrl).then(() => {
@@ -50,7 +56,7 @@ export default function SharePostModal() {
 		<Dialog open={modal.open} onOpenChange={(o) => { if (!o) { onCancel() } }}>
 			<DialogContent className="w-full max-w-[600px] rounded-lg gap-0 flex flex-col ">
 				<DialogHeader>
-					<DialogTitle><h3 className="font-medium text-lg line-clamp-1 mb-2">Share post</h3></DialogTitle>
+					<DialogTitle><h3 className="font-medium text-lg line-clamp-1 mb-2">Share {modal.mode == 'post' ? 'post' : 'profile'}</h3></DialogTitle>
 				</DialogHeader>
 
 				<div className="w-full flex gap-2 mt-4 flex-wrap">
@@ -61,25 +67,25 @@ export default function SharePostModal() {
 						</Button>
 					</FacebookShareButton>
 
-					<PinterestShareButton className="grow" url={postUrl} media={modal.imageUrl} description={modal.postTitle ? `${modal.postTitle} on DreamCanvas` : undefined}>
+					<PinterestShareButton className="grow" url={postUrl} media={modal.imageUrl} description={modal.title ? `${modal.title} on DreamCanvas` : undefined}>
 						<Button className="w-full h-[46px] px-2" variant={'outline'} size={'lg'}>
 							<PinterestIcon size={32} round />
 						</Button>
 					</PinterestShareButton>
 
-					<RedditShareButton className="grow" url={postUrl} title={modal.postTitle ? `${modal.postTitle} on DreamCanvas` : undefined}>
+					<RedditShareButton className="grow" url={postUrl} title={modal.title ? `${modal.title} on DreamCanvas` : undefined}>
 						<Button className="w-full h-[46px] px-2" variant={'outline'} size={'lg'}>
 							<RedditIcon size={32} round />
 						</Button>
 					</RedditShareButton>
 
-					<WhatsappShareButton className="grow" url={postUrl} title={modal.postTitle ? `${modal.postTitle} on DreamCanvas` : undefined} separator=" - ">
+					<WhatsappShareButton className="grow" url={postUrl} title={modal.title ? `${modal.title} on DreamCanvas` : undefined} separator=" - ">
 						<Button className="w-full h-[46px] px-2" variant={'outline'} size={'lg'}>
 							<WhatsappIcon size={32} round />
 						</Button>
 					</WhatsappShareButton>
 
-					<TwitterShareButton className="grow" url={postUrl} title={modal.postTitle ? `${modal.postTitle} on DreamCanvas - ` : undefined}>
+					<TwitterShareButton className="grow" url={postUrl} title={modal.title ? `${modal.title} on DreamCanvas - ` : undefined}>
 						<Button className="w-full h-[46px] px-2" variant={'outline'} size={'lg'}>
 							<XIcon size={32} round />
 						</Button>
