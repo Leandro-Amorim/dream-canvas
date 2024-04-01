@@ -1,4 +1,4 @@
-import { timestamp, pgTable, text, primaryKey, integer, boolean, uuid, json, varchar, AnyPgColumn } from "drizzle-orm/pg-core";
+import { timestamp, pgTable, text, primaryKey, integer, boolean, uuid, json, varchar, AnyPgColumn, serial } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from '@auth/core/adapters';
 import { GenerationRequest } from "@/types/generation";
 import { ReportType } from "@/types/database";
@@ -39,6 +39,7 @@ export const verificationTokens = pgTable("verificationToken", {
 
 export const users = pgTable("user", {
 	id: text("id").notNull().primaryKey(),
+	customerId: text("customerId"),
 	name: text("name").notNull().default(''),
 	description: text("description").notNull().default(''),
 	email: text("email").notNull(),
@@ -193,3 +194,11 @@ export const commentSubscriptions = pgTable("commentSubscriptions", {
 		compoundKey: primaryKey({ columns: [row.commentId, row.userId] }),
 	})
 );
+
+//Currently only the plan with the lowest id will be active.
+export const plans = pgTable("plans", {
+	id: serial('id').notNull().primaryKey(),
+	productId: text('productId').notNull().unique(),
+	priceId: text('priceId'),
+	price: integer('price'),
+});
