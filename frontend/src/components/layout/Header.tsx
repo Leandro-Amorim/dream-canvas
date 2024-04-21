@@ -2,6 +2,7 @@ import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, navigationMenuTriggerStyle } from "../ui/navigation-menu";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import Notifications from "./Notifications";
 
 export default function Header() {
 
@@ -38,15 +39,14 @@ export default function Header() {
 					</NavigationMenuList>
 				</NavigationMenu>
 			</div>
-			<div className="flex-1 items-center gap-3 justify-end hidden md:flex">
-				<Button variant={'outline'} size={"default"}>Sign in</Button>
-				<Button size={"default"} asChild>
+			<div className="flex-1 flex items-center gap-2 justify-end">
+				<Notifications />
+				<Button variant={'outline'} size={"default"} className="hidden md:flex">Sign in</Button>
+				<Button variant={'outline'} size={"sm"} className="flex md:hidden">Sign in</Button>
+				<Button size={"default"} className="hidden md:flex" asChild>
 					<Link href="/generate">Generate</Link>
 				</Button>
-			</div>
-			<div className="flex-1 flex items-center gap-2 justify-end md:hidden">
-				<Button variant={'outline'} size={"sm"}>Sign in</Button>
-				<Button size={"sm"} asChild>
+				<Button size={"sm"} className="flex md:hidden" asChild>
 					<Link href="/generate">Generate</Link>
 				</Button>
 			</div>

@@ -3,9 +3,10 @@ import protectAPI from '@/server/protectAPI';
 import { APIRequest, GenericAPIResponse } from '@/types/api';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]';
-import { follows, postSaves } from '@/server/database/schema';
+import { follows, notifications } from '@/server/database/schema';
 import { db } from '@/server/database/database';
 import { and, eq } from 'drizzle-orm';
+import sendSocket from '@/server/sendSocket';
 
 export type APIResponse = GenericAPIResponse<{ success: boolean }>;
 
@@ -29,14 +30,18 @@ export default async function handler(req: APIRequest<RequestBody>, res: NextApi
 			} satisfies APIResponse);
 		}
 
+		let insertedFollows: { id: string }[] = [];
+
 		if (req.body.follow) {
-			await db.insert(follows).values({
+			insertedFollows = await db.insert(follows).values({
 				userId: req.body.userId,
 				followerId: userId,
 			}).onConflictDoUpdate({
 				target: [follows.userId, follows.followerId],
 				set: { followedAt: (new Date()).toISOString() },
-			});
+			}).returning({
+				id: follows.id
+			})
 		}
 		else {
 			await db.delete(follows).where(
@@ -45,6 +50,21 @@ export default async function handler(req: APIRequest<RequestBody>, res: NextApi
 					eq(follows.followerId, userId)
 				)
 			);
+		}
+
+		try {
+			if (req.body.follow) {
+				await db.insert(notifications).values({
+					type: 'NEW_FOLLOWER',
+					userId: req.body.userId,
+					followId: insertedFollows[0].id,
+				})
+				sendSocket([req.body.userId?? '']);
+			}
+		}
+		catch (err) {
+			console.error('Notification error - Follow');
+			console.error(err);
 		}
 
 		return res.status(200).json({

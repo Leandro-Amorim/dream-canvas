@@ -3,9 +3,10 @@ import protectAPI from '@/server/protectAPI';
 import { APIRequest, GenericAPIResponse } from '@/types/api';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]';
-import { postLikes } from '@/server/database/schema';
+import { notifications, postLikes, posts } from '@/server/database/schema';
 import { db } from '@/server/database/database';
 import { and, eq } from 'drizzle-orm';
+import sendSocket from '@/server/sendSocket';
 
 export type APIResponse = GenericAPIResponse<{ success: boolean }>;
 
@@ -22,14 +23,17 @@ export default async function handler(req: APIRequest<RequestBody>, res: NextApi
 		const session = await getServerSession(req, res, authOptions);
 		const userId = session?.user.id ?? '';
 
+		let insertedLikes: { id: string }[] = [];
 		if (req.body.like) {
-			await db.insert(postLikes).values({
+			insertedLikes = await db.insert(postLikes).values({
 				postId: req.body.postId,
 				userId
 			}).onConflictDoUpdate({
 				target: [postLikes.postId, postLikes.userId],
 				set: { likedAt: (new Date()).toISOString() }
-			});
+			}).returning({
+				id: postLikes.id
+			})
 		}
 		else {
 			await db.delete(postLikes).where(
@@ -38,6 +42,31 @@ export default async function handler(req: APIRequest<RequestBody>, res: NextApi
 					eq(postLikes.userId, userId)
 				)
 			);
+		}
+
+		try {
+			const post = await db.query.posts.findFirst({
+				where: eq(posts.id, req.body.postId),
+				columns: {
+					authorId: true,
+					orphan: true,
+				}
+			});
+
+			if (req.body.like && post?.authorId !== userId && !post?.orphan) {
+				await db.insert(notifications).values({
+					type: 'NEW_LIKE',
+					userId: post?.authorId ?? '',
+					likeId: insertedLikes[0].id,
+					postId: req.body.postId
+				})
+				sendSocket([post?.authorId ?? '']);
+			}
+
+		}
+		catch (err) {
+			console.error('Notification error - Like');
+			console.error(err);
 		}
 
 		return res.status(200).json({

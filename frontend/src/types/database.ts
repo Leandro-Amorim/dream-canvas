@@ -97,3 +97,29 @@ export interface IProfileCard {
 	blockedByMe: boolean,
 	followedAt: string
 }
+
+export type NotificationType = 'NEW_FOLLOWER' | 'NEW_LIKE' | 'NEW_COMMENT' | 'NEW_REPLY' | 'SYSTEM';
+
+export interface INotification {
+	id: string,
+	type: NotificationType,
+	seen: boolean,
+
+	user: {
+		id: string | null,
+		name: string | null,
+		avatar: string | null,
+		followedByMe: boolean
+	} | null,
+
+	post: {
+		id: string | null,
+		title: string | null,
+		imageUrl: string | null,
+	} | null,
+
+	additionalData: string | null,
+	additionalImage: string | null,
+
+	createdAt: string
+}

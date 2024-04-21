@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
 }
 
-export async function fetchData(input: string, body?: unknown) {
+export async function fetchData<T = unknown>(input: string, body?: unknown) {
 
 	const response = await fetch(input, {
 		headers: body ? { "Content-Type": "application/json" } : undefined,
@@ -18,7 +18,7 @@ export async function fetchData(input: string, body?: unknown) {
 	if (!response.ok) {
 		throw new Error('Network fail');
 	}
-	return response.json();
+	return response.json() as Promise<T>;
 }
 const clamp = (num: number, min: number, max: number) => Math.min(Math.max(num, min), max);
 
