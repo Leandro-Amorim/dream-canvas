@@ -125,7 +125,7 @@ export default function Notifications() {
 					</span>
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent className="md:max-w-[500px] w-screen min-w-0 mr-8 p-3">
+			<PopoverContent className="md:max-w-[500px] w-screen md:mr-8 p-3">
 				<InfiniteScroll loadMore={() => { !isFetching && fetchNextPage() }} hasMore={hasNextPage} className="w-full" loader={<div className="w-full flex justify-center" key={0}><IconLoader2 className="size-6 text-primary animate-spin my-1" /></div>}>
 					{
 						notificationsList.length === 0 && !isFetching &&
