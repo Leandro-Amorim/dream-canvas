@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^0.5.1",
+    "@aws-sdk/client-s3": "^3.556.0",
     "@hookform/resolvers": "^3.3.4",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-checkbox": "^1.0.4",
@@ -42,6 +43,7 @@
     "drizzle-orm": "^0.29.3",
     "embla-carousel-react": "^8.0.0-rc22",
     "escape-string-regexp": "^5.0.0",
+    "formidable": "^3.5.1",
     "immutability-helper": "^3.1.1",
     "is-uuid": "^1.0.2",
     "jsonwebtoken": "^9.0.2",
@@ -72,6 +74,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/formidable": "^3.4.5",
     "@types/is-uuid": "^1.0.2",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/luxon": "^3.4.2",

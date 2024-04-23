@@ -4,6 +4,7 @@ import DeletePostModal from "./DeletePostModal";
 import ReportPostModal from "./ReportPostModal";
 import SharePostModal from "./SharePostModal";
 import SigninModal from "./SigninModal";
+import UnblockUserModal from "./UnblockUserModal";
 
 export default function GlobalModals() {
 	return (
@@ -11,6 +12,7 @@ export default function GlobalModals() {
 			<SigninModal />
 			<PostModal />
 			<BlockUserModal/>
+			<UnblockUserModal/>
 			<ReportPostModal/>
 			<DeletePostModal/>
 			<SharePostModal/>

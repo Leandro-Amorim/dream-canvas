@@ -75,6 +75,15 @@ export const blockUserModalState = atom({
 	}
 });
 
+export const unblockUserModalState = atom({
+	key: 'unblockUserModalState', default: {
+		open: false,
+		blockedName: null as null | string,
+		blockedId: null as null | string,
+		onSuccess: (() => { }) as () => void
+	}
+});
+
 export const reportModalState = atom({
 	key: 'reportModalState', default: {
 		open: false,

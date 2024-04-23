@@ -5,8 +5,8 @@ import GlobalModals from "./modals/GlobalModals";
 
 export default function Main({ children }: { children?: ReactNode }) {
 	return (
-		<main>
-			<div className="container">
+		<main className="min-h-screen flex flex-col">
+			<div className="container grow">
 				<GlobalModals/>
 				<Header />
 				<div className="flex flex-col lg:px-10">

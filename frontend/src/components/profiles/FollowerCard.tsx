@@ -129,9 +129,11 @@ export default function FollowerCard({ profile, refetchFn }: { profile: IProfile
 				<div className="flex justify-between gap-2 mt-2">
 					<PhotoProvider maskOpacity={0.97} speed={() => 300} easing={() => 'cubic-bezier(0.215, 0.61, 0.355, 1)'}>
 						{
-							profile.postImages.length === 0 ?
-								<div className="w-full flex items-center justify-center text-center p-8 italic text-gray-400 text-sm bg-muted rounded-lg">
-									{`This user doesn't have any posts`}
+							!profile.postImages || profile.postImages.length === 0 ?
+								<div className="w-full bg-muted rounded-lg">
+									<div className="w-[calc(100%-16px)] aspect-[3/1] flex items-center justify-center text-center italic text-gray-400 text-sm">
+										{`This user doesn't have any posts`}
+									</div>
 								</div>
 								:
 								[0, 1, 2].map((i) => {

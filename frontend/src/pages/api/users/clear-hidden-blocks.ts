@@ -1,14 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import protectAPI from '@/server/protectAPI';
 import { GenericAPIResponse } from '@/types/api';
-import { users } from '@/server/database/schema';
-import { db } from '@/server/database/database';
-import { eq, } from 'drizzle-orm';
-import { stripe } from '@/server/database/stripe';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]';
+import { blocks } from '@/server/database/schema';
+import { db } from '@/server/database/database';
+import { and, eq } from 'drizzle-orm';
 
-export type APIResponse = GenericAPIResponse<{ url: string }>;
+export type APIResponse = GenericAPIResponse<{ success: boolean }>;
+
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
@@ -18,21 +18,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		const session = await getServerSession(req, res, authOptions);
 		const userId = session?.user.id ?? '';
 
-		const customerId = (await db.select({ customerId: users.customerId }).from(users).where(eq(users.id, userId))).at(0)?.customerId;
-
-		if (!customerId) { throw new Error('No customer found'); }
-
-		const portalSession = await stripe.billingPortal.sessions.create({
-			customer: customerId,
-			return_url: `${process.env.PUBLIC_URL}/settings#billing`,
-		});
-
-		if (portalSession.url === null) { throw new Error('No url found'); }
+		await db.delete(blocks).where(
+			and(
+				eq(blocks.hidden, true),
+				eq(blocks.userId, userId)
+			)
+		);
 
 		return res.status(200).json({
 			status: 'success',
 			data: {
-				url: portalSession.url,
+				success: true
 			},
 		} satisfies APIResponse);
 

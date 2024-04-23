@@ -123,3 +123,11 @@ export interface INotification {
 
 	createdAt: string
 }
+
+export interface IBlock {
+	id: string,
+	name: string,
+	description: string,
+	image: string,
+	blockedAt: string
+}

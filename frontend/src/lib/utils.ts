@@ -20,6 +20,29 @@ export async function fetchData<T = unknown>(input: string, body?: unknown) {
 	}
 	return response.json() as Promise<T>;
 }
+
+export async function fetchDataForm<T = unknown>(input: string, body: Record<string, string | File | null | undefined>) {
+
+	let formData = new FormData();
+
+	for (const key of Object.keys(body)) {
+		if (body[key] !== undefined) {
+			formData.append(key, body[key] === null ? '' : body[key] as string | Blob);
+		}
+	}
+
+	const response = await fetch(input, {
+		method: 'POST',
+		body: formData
+	});
+
+	if (!response.ok) {
+		throw new Error('Network fail');
+	}
+	return response.json() as Promise<T>;
+}
+
+
 const clamp = (num: number, min: number, max: number) => Math.min(Math.max(num, min), max);
 
 export function parseModifiers(prompt: string) {

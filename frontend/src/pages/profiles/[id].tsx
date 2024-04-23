@@ -189,8 +189,11 @@ export default function Profile({ originalProfile }: { originalProfile: IProfile
 					:
 					<>
 						<div className="w-full flex flex-col items-center overflow-hidden relative">
-							<div className="w-full h-[180px] absolute">
-								<Image src={profile.coverImage || '/profile-cover.png'} alt="Cover image" fill={true} className="object-cover" />
+							<div className="w-full h-[180px] absolute bg-secondary/90 rounded-t-lg">
+								{
+									profile.coverImage &&
+									<Image src={profile.coverImage} alt="Cover image" fill={true} className="object-cover" />
+								}
 								<div className="absolute right-1 top-1 flex gap-1">
 									{
 										!isOwnProfile && !followed &&
@@ -211,7 +214,7 @@ export default function Profile({ originalProfile }: { originalProfile: IProfile
 												<DropdownMenuItem className={`cursor-pointer flex items-center gap-1`} onClick={shareProfile}><IconShare size={16} /> Share profile</DropdownMenuItem>
 												{
 													isOwnProfile &&
-													<DropdownMenuItem className="cursor-pointer flex items-center gap-1" onClick={() => router.push(`/settings/profile`)}>
+													<DropdownMenuItem className="cursor-pointer flex items-center gap-1" onClick={() => router.push(`/settings#profile`)}>
 														{
 															<><IconEdit size={16} /> Edit profile</>
 														}
@@ -246,7 +249,7 @@ export default function Profile({ originalProfile }: { originalProfile: IProfile
 								</div>
 
 								<div className="flex-1 px-2 flex flex-col items-center min-w-[190px] text-center">
-									<Avatar className="size-[150px] shrink-0">
+									<Avatar className="size-[150px] shrink-0 border shadow-md">
 										<AvatarImage className="object-cover" src={profile.image || ''} alt={profile.name || 'User'} />
 										<AvatarFallback><IconUser size={80} className="text-gray-600" /></AvatarFallback>
 									</Avatar>
