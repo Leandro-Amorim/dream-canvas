@@ -56,7 +56,7 @@ export default function SharePostModal() {
 		<Dialog open={modal.open} onOpenChange={(o) => { if (!o) { onCancel() } }}>
 			<DialogContent className="w-full max-w-[600px] rounded-lg gap-0 flex flex-col ">
 				<DialogHeader>
-					<DialogTitle><h3 className="font-medium text-lg line-clamp-1 mb-2">Share {modal.mode == 'post' ? 'post' : 'profile'}</h3></DialogTitle>
+					<DialogTitle className="font-medium text-lg line-clamp-1 mb-2">Share {modal.mode == 'post' ? 'post' : 'profile'}</DialogTitle>
 				</DialogHeader>
 
 				<div className="w-full flex gap-2 mt-4 flex-wrap">

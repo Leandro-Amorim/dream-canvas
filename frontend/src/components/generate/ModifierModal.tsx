@@ -112,7 +112,7 @@ export default function ModifierModal() {
 		<Dialog open={modal.open} onOpenChange={(open) => { if (!open) { onClose() } }}>
 			<DialogContent className="w-full max-w-[600px] rounded-lg gap-0 pb-6">
 				<DialogHeader>
-					<DialogTitle><h3 className="font-medium text-lg line-clamp-1 mb-2">{modal.name}</h3></DialogTitle>
+					<DialogTitle className="font-medium text-lg line-clamp-1 mb-2">{modal.name}</DialogTitle>
 				</DialogHeader>
 
 				<div className="flex gap-6">

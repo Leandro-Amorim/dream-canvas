@@ -52,7 +52,7 @@ export default function DeletePostModal() {
 		<Dialog open={modal.open} onOpenChange={(o) => { if (!o) { onCancel() } }}>
 			<DialogContent className="w-full max-w-[600px] rounded-lg gap-0 pb-6">
 				<DialogHeader>
-					<DialogTitle><h3 className="font-medium text-lg line-clamp-1 mb-2">Delete post</h3></DialogTitle>
+					<DialogTitle className="font-medium text-lg line-clamp-1 mb-2">Delete post</DialogTitle>
 				</DialogHeader>
 
 				<h3 className="text-sm">{`Are you sure you want to delete this post? This action cannot be undone.`}</h3>

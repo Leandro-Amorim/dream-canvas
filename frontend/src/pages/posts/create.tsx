@@ -418,7 +418,7 @@ function ImagesModal({ open, onClose, images, setImages }: { open: boolean, onCl
 			<DialogContent className="w-full h-full max-w-[1100px] rounded-lg gap-0 pb-6">
 				<ScrollArea className="w-full h-full mt-3 pr-4">
 					<DialogHeader>
-						<DialogTitle><h3 className="font-medium text-2xl line-clamp-1 mb-2">Images</h3></DialogTitle>
+						<DialogTitle className="font-medium text-2xl line-clamp-1 mb-2">Images</DialogTitle>
 
 						<div className="w-full px-[2px]">
 							<div className="w-full relative">

@@ -58,7 +58,7 @@ export default function HistoryCardGrid({ image, selected, setSelected, onDelete
 				<div className="flex items-center gap-1">
 					<Button className="size-8" size={'icon'} variant={'default'} onClick={() => { router.push(`/posts/create?id=${image.id}`) }}><IconPhotoPlus size={18} /></Button>
 					<DropdownMenu>
-						<DropdownMenuTrigger><Button className="size-8" size={'icon'} variant={'outline'}> <IconDots size={20} /> </Button></DropdownMenuTrigger>
+						<DropdownMenuTrigger asChild><Button className="size-8" size={'icon'} variant={'outline'}> <IconDots size={20} /> </Button></DropdownMenuTrigger>
 						<DropdownMenuContent>
 							<DropdownMenuItem className="cursor-pointer flex items-center gap-1" onClick={() => { downloadImage(image.url) }}><IconDownload size={16} /> Download</DropdownMenuItem>
 							<DropdownMenuItem className="cursor-pointer flex items-center gap-1" onClick={() => { router.push(`/generate?imageId=${image.id}`) }}><IconPhotoEdit size={16} /> Use prompt</DropdownMenuItem>

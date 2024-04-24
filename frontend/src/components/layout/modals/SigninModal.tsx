@@ -41,7 +41,7 @@ export default function SigninModal() {
 						(isSuccess && providers) ?
 							Object.values(providers).map((provider) => {
 								return (provider.type === 'oauth' &&
-									<Button className="grow" variant={'outline'} size={'lg'}>
+									<Button className="grow" variant={'outline'} size={'lg'} key={provider.id}>
 										{/*@ts-ignore*/}
 										<Image src={icons[provider.id] ?? `https://authjs.dev/img/providers/${provider.id}.svg`} alt={provider.name} width={24} height={24} />
 									</Button>

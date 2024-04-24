@@ -62,7 +62,7 @@ export default function ReportPostModal() {
 		<Dialog open={modal.open} onOpenChange={(o) => { if (!o) { onCancel() } }}>
 			<DialogContent className="w-full max-w-[600px] rounded-lg gap-0 pb-6">
 				<DialogHeader>
-					<DialogTitle><h3 className="font-medium text-lg line-clamp-1 mb-2">Report content</h3></DialogTitle>
+					<DialogTitle className="font-medium text-lg line-clamp-1 mb-2">Report content</DialogTitle>
 				</DialogHeader>
 
 				<h3 className="text-sm mt-1">

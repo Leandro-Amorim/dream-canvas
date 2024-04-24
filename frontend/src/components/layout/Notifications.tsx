@@ -116,7 +116,7 @@ export default function Notifications() {
 
 	return (
 		<Popover open={open} onOpenChange={onOpenChange}>
-			<PopoverTrigger>
+			<PopoverTrigger asChild>
 				<Button variant={"ghost"} size={'icon'} className="rounded-full relative">
 					<IconBellFilled size={20} className={`${hasNew ? 'animate-bell' : ''}`} />
 					<span className={`absolute transition-all translate-x-1/2 -translate-y-1/2 flex right-1 top-1 ${hasNew ? 'size-2' : 'size-0'}`}>

@@ -73,7 +73,7 @@ export const CommentField = forwardRef<HTMLDivElement, CommentFieldProps>(({ pos
 			<div className="w-full mt-4 flex items-center justify-end gap-2">
 				<div className="grow shrink flex justify-end">
 					<Tooltip>
-						<TooltipTrigger>
+						<TooltipTrigger asChild>
 							<div className="flex items-center gap-1">
 								<Label htmlFor={checkboxId} className="text-sm text-muted-foreground font-normal cursor-pointer">Subscribe to thread</Label>
 								<Checkbox id={checkboxId} checked={subscribe} onCheckedChange={(checked) => setSubscribe(checked as boolean)} />

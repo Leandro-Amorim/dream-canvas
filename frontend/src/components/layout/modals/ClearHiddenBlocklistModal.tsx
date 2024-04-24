@@ -35,7 +35,7 @@ export default function ClearHiddenBlocklistModal({ open, setOpen }: { open: boo
 		<Dialog open={open} onOpenChange={(o) => { if (!o) { onCancel() } }}>
 			<DialogContent className="w-full max-w-[600px] rounded-lg gap-0 pb-6">
 				<DialogHeader>
-					<DialogTitle><h3 className="font-medium text-lg line-clamp-1 mb-2">Clear Hidden Blocklist</h3></DialogTitle>
+					<DialogTitle className="font-medium text-lg line-clamp-1 mb-2">Clear Hidden Blocklist</DialogTitle>
 				</DialogHeader>
 
 				<h3 className="text-sm">{`Are you sure you want to clear the hidden blocklist? You'll be able to see the posts of all the anonymous users you've blocked.`}</h3>

@@ -138,7 +138,7 @@ export default function PromptSection() {
 					}
 				</Button>
 				<Popover>
-					<PopoverTrigger><Button variant="outline" size="icon" className="size-12"><GearIcon className="w-5 h-5" /></Button></PopoverTrigger>
+					<PopoverTrigger asChild><Button variant="outline" size="icon" className="size-12"><GearIcon className="w-5 h-5" /></Button></PopoverTrigger>
 					<PopoverContent side="top" align="end" className="flex flex-col w-[600px]">
 						<h3 className="font-medium text-lg mb-4">Settings</h3>
 

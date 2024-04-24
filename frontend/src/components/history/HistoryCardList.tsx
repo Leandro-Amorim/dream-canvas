@@ -61,7 +61,7 @@ export default function HistoryCardList({ image, selected, setSelected, onDelete
 						<div className="flex gap-2 items-center shrink-0">
 							<Button className="flex items-center pl-2 gap-1" variant={'default'}><IconPhotoPlus size={18} onClick={() => { router.push(`/posts/create?id=${image.id}`) }} />Create Post</Button>
 							<DropdownMenu>
-								<DropdownMenuTrigger><Button className="size-9" size={'icon'} variant={'outline'}> <IconDots size={18} /> </Button></DropdownMenuTrigger>
+								<DropdownMenuTrigger asChild><Button className="size-9" size={'icon'} variant={'outline'}> <IconDots size={18} /> </Button></DropdownMenuTrigger>
 								<DropdownMenuContent>
 									<DropdownMenuItem className="cursor-pointer flex items-center gap-1" onClick={() => { downloadImage(image.url) }}><IconDownload size={16} /> Download</DropdownMenuItem>
 									<DropdownMenuItem className="cursor-pointer flex items-center gap-1" onClick={() => { router.push(`/generate?imageId=${image.id}`) }}><IconPhotoEdit size={16} /> Use prompt</DropdownMenuItem>

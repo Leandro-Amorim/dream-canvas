@@ -34,6 +34,7 @@ export default function Header() {
 		queryFn: async () => {
 			return fetchData<APIResponse>('/api/profiles/current')
 		},
+		enabled: isSignedIn,
 	})
 
 	useEffect(() => {

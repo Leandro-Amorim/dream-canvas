@@ -53,7 +53,7 @@ export default function UnblockUserModal() {
 		<Dialog open={modal.open} onOpenChange={(o) => { if (!o) { onCancel() } }}>
 			<DialogContent className="w-full max-w-[600px] rounded-lg gap-0 pb-6">
 				<DialogHeader>
-					<DialogTitle><h3 className="font-medium text-lg line-clamp-1 mb-2">Unblock {modal.blockedName || 'user'}</h3></DialogTitle>
+					<DialogTitle className="font-medium text-lg line-clamp-1 mb-2">Unblock {modal.blockedName || 'user'}</DialogTitle>
 				</DialogHeader>
 
 				<h3 className="text-sm">{`Are you sure you want to unblock this user? You'll be able to see their posts again.`}</h3>

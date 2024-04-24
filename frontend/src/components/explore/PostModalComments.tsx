@@ -3,7 +3,7 @@ import { Separator } from "../ui/separator";
 import { fetchData } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { APIResponse } from "@/pages/api/comments/get-comments";
-import { Dispatch, SetStateAction, useCallback, useMemo, useState } from "react";
+import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from "react";
 import { IconLoader2, IconMessageOff } from "@tabler/icons-react";
 import { IComment } from "@/types/database";
 import { CommentField } from "./CommentField";
@@ -76,7 +76,7 @@ export default function PostModalComments({ postId, isPostOwner, setDirty }: { p
 								session.status === 'authenticated' &&
 								<CommentField setReplyingTo={setReplyingTo} postId={postId} replyingTo={null} onCommentSend={onCommentSend} />
 							}
-							< div className="w-full flex flex-col gap-4 mt-4 pb-2">
+							<div className="w-full flex flex-col gap-4 mt-4 pb-2">
 								{
 									commentCount === 0 ?
 										<div className="w-full mt-4 flex justify-center">
@@ -89,8 +89,8 @@ export default function PostModalComments({ postId, isPostOwner, setDirty }: { p
 										:
 										parents.map((comment) => {
 											return (
-												<>
-													<Comment key={comment.id} refetchComments={refetchComments} onDeleteComment={onDeleteComment} isPostOwner={isPostOwner} comment={comment} setReplyingTo={setReplyingTo} />
+												<React.Fragment key={comment.id}>
+													<Comment refetchComments={refetchComments} onDeleteComment={onDeleteComment} isPostOwner={isPostOwner} comment={comment} setReplyingTo={setReplyingTo} />
 													{
 														(childrenRecord[comment.id] ?? []).map((child) => {
 															return (
@@ -101,7 +101,7 @@ export default function PostModalComments({ postId, isPostOwner, setDirty }: { p
 													{
 														replyingTo === comment.id && <CommentField ref={(node) => { scrollIntoView(node) }} setReplyingTo={setReplyingTo} postId={postId} replyingTo={comment.id} onCommentSend={onCommentSend} />
 													}
-												</>
+												</React.Fragment>
 
 											)
 										})

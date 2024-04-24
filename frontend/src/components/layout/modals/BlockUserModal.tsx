@@ -61,7 +61,7 @@ export default function BlockUserModal() {
 		<Dialog open={modal.open} onOpenChange={(o) => { if (!o) { onCancel() } }}>
 			<DialogContent className="w-full max-w-[600px] rounded-lg gap-0 pb-6">
 				<DialogHeader>
-					<DialogTitle><h3 className="font-medium text-lg line-clamp-1 mb-2">Block user</h3></DialogTitle>
+					<DialogTitle className="font-medium text-lg line-clamp-1 mb-2">Block user</DialogTitle>
 				</DialogHeader>
 
 				<h3 className="text-sm">{`Are you sure you want to block this user? If it's an anonymous user, the only way to unblock them is to clear your hidden blocklist.`}</h3>
