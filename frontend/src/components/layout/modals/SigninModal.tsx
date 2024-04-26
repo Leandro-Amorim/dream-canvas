@@ -1,25 +1,29 @@
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { signinModalOpenState } from "@/lib/atoms";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { IconLoader2 } from "@tabler/icons-react"
 import { useQuery } from "@tanstack/react-query";
-import { getProviders } from "next-auth/react";
+import { getProviders, signIn } from "next-auth/react";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useCallback, useState } from "react";
 import { useRecoilState } from "recoil"
+import { toast } from "sonner";
+import { z } from "zod";
+
+const emailSchema = z.string().email();
 
 export default function SigninModal() {
 	const [open, setOpen] = useRecoilState(signinModalOpenState);
 
+	const [email, setEmail] = useState('');
 
 	const { data: providers, isSuccess } = useQuery({
 		queryKey: ['providers'],
 		queryFn: async () => {
-			return await getProviders();
+			return getProviders();
 		}
 	})
 
@@ -27,6 +31,25 @@ export default function SigninModal() {
 		'google': 'https://authjs.dev/img/providers/google.svg',
 		'github': 'https://authjs.dev/img/providers/github-dark.svg',
 	}
+
+	const onSignIn = useCallback(async (provider: string) => {
+
+		if (provider === 'email' && !emailSchema.safeParse(email).success) {
+			toast.error('Please enter a valid email');
+			return;
+		}
+
+		const data = await signIn(provider, { email: provider === 'email' ? email : undefined, redirect: false });
+
+		if (data?.error) {
+			toast.error('There was an error processing this action', {
+				description: 'Please try again later.'
+			});
+		}
+		else if (provider === 'email') {
+			toast.success('Check your email for a link to sign in.');
+		}
+	}, [email]);
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
@@ -41,7 +64,7 @@ export default function SigninModal() {
 						(isSuccess && providers) ?
 							Object.values(providers).map((provider) => {
 								return (provider.type === 'oauth' &&
-									<Button className="grow" variant={'outline'} size={'lg'} key={provider.id}>
+									<Button className="grow" variant={'outline'} size={'lg'} key={provider.id} onClick={() => onSignIn(provider.id)}>
 										{/*@ts-ignore*/}
 										<Image src={icons[provider.id] ?? `https://authjs.dev/img/providers/${provider.id}.svg`} alt={provider.name} width={24} height={24} />
 									</Button>
@@ -56,8 +79,8 @@ export default function SigninModal() {
 					<Separator className="grow w-0" />
 				</div>
 				<div className="flex flex-col mt-4 w-full">
-					<Input placeholder="E-mail address" className="h-10 w-full" />
-					<Button className="w-full mt-3" size={'lg'}>Sign in with e-mail</Button>
+					<Input placeholder="E-mail address" type="email" className="h-10 w-full" value={email} onChange={(e) => setEmail(e.target.value)} />
+					<Button className="w-full mt-3" size={'lg'} onClick={() => onSignIn('email')}>Sign in with e-mail</Button>
 				</div>
 			</DialogContent>
 		</Dialog>

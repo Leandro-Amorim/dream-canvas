@@ -11,6 +11,7 @@ import uploadImage from '@/server/s3/uploadImage';
 import fs from 'node:fs/promises';
 import deleteImage from '@/server/s3/deleteImage';
 import getKeyFromS3Url from '@/server/s3/getKeyFromS3Url';
+import isS3Url from '@/server/s3/isS3Url';
 export type APIResponse = GenericAPIResponse<{ success: boolean }>;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -28,7 +29,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		const form = formidable({});
 		const [fields, files] = await form.parse<'name' | 'description' | 'image' | 'coverImage', 'image' | 'coverImage'>(req);
 
-		const updateObject = {} as Record<string, string>;
+		const updateObject = {
+			signupCompleted: true
+		} as Record<string, string | boolean>;
 
 		if (fields.name) {
 			updateObject.name = fields.name[0];
@@ -67,7 +70,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			const body = await fs.readFile(path);
 			const url = await uploadImage(`profiles/${userId}/cover_${name}`, body);
 			await fs.unlink(path);
-			
+
 			updateObject.coverImage = url;
 			markToDeleteCoverImage = true;
 		}
@@ -79,12 +82,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		await db.update(users).set(updateObject).where(eq(users.id, userId));
 
 		try {
-			if (oldProfile?.image && markToDeleteImage) {
+			if (oldProfile?.image && markToDeleteImage && isS3Url(oldProfile.image)) {
 				const key = getKeyFromS3Url(oldProfile.image);
 				await deleteImage(key);
 			}
 
-			if (oldProfile?.coverImage && markToDeleteCoverImage) {
+			if (oldProfile?.coverImage && markToDeleteCoverImage && isS3Url(oldProfile.coverImage)) {
 				const key = getKeyFromS3Url(oldProfile.coverImage);
 				await deleteImage(key);
 			}

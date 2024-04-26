@@ -1,4 +1,3 @@
-import { ICurrentProfile } from "@/types/database";
 import { GenerationRequest, GenerationSettings } from "@/types/generation";
 import { atom, selector } from "recoil";
 
@@ -116,8 +115,4 @@ export const shareModalState = atom({
 		title: '',
 		imageUrl: '',
 	}
-})
-
-export const currentProfileState = atom({
-	key: 'currentProfileState', default: null as null | ICurrentProfile
 })

@@ -4,48 +4,22 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import Notifications from "./Notifications";
 import { IconMenu2, IconUser } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { signOut, useSession } from "next-auth/react";
-import { useQuery } from "@tanstack/react-query";
-import { fetchData } from "@/lib/utils";
-import { APIResponse } from "@/pages/api/profiles/current";
 import { useTheme } from "next-themes";
-import { useRecoilState } from "recoil";
-import { currentProfileState } from "@/lib/atoms";
-import { useRouter } from "next/router";
 
 export default function Header() {
 
 	const [open, setOpen] = useState(false);
-
 	const { setTheme } = useTheme();
-	const router = useRouter();
-
 	const session = useSession();
 	const userId = session.data?.user.id ?? null;
 	const isSignedIn = userId !== null;
 
-	const [profile, setProfile] = useRecoilState(currentProfileState);
-
-	const { data, isSuccess } = useQuery({
-		queryKey: ['current_profile'],
-		queryFn: async () => {
-			return fetchData<APIResponse>('/api/profiles/current')
-		},
-		enabled: isSignedIn,
-	})
-
-	useEffect(() => {
-		if (isSuccess) {
-			setProfile(data?.status === 'success' ? data.data?.profile ?? null : null);
-		}
-	}, [data, isSuccess, setProfile]);
-
 	const onLogout = async () => {
-		const data = await signOut({ redirect: false, callbackUrl: "/" });
-		router.push(data.url);
+		await signOut();
 	}
 
 	return (
@@ -138,7 +112,7 @@ export default function Header() {
 								>
 
 									<Avatar className="size-10">
-										<AvatarImage className="object-cover" src={profile?.image ?? ''} alt={profile?.name ?? 'User'} />
+										<AvatarImage className="object-cover" src={session.data?.user.image ?? ''} alt={session.data?.user.name ?? 'User'} />
 										<AvatarFallback><IconUser size={20} className="text-gray-600" /></AvatarFallback>
 									</Avatar>
 								</Button>

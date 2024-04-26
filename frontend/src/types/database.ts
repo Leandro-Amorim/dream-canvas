@@ -131,9 +131,3 @@ export interface IBlock {
 	image: string,
 	blockedAt: string
 }
-
-export interface ICurrentProfile {
-	id: string,
-	name: string,
-	image: string
-}

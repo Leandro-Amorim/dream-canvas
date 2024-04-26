@@ -40,23 +40,34 @@ export const authOptions: NextAuthOptions = {
 		GoogleProvider({
 			clientId: process.env.GOOGLE_CLIENT_ID ?? '',
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
+
+			//Not recommended in production, only used for demo purposes (even though google and github can be considered "safe" providers since email is always verified)
+			allowDangerousEmailAccountLinking: true,
+
 		}),
 		GithubProvider({
 			clientId: process.env.GITHUB_CLIENT_ID ?? '',
 			clientSecret: process.env.GITHUB_CLIENT_SECRET ?? '',
+
+			//Same as above
+			allowDangerousEmailAccountLinking: true,
 		})
 	],
 	callbacks: {
 		async session({ session, user }) {
-			//@ts-ignore
 			session.user.premium = user.premium;
 			session.user.id = user.id;
+			session.user.description = user.description;
+			session.user.coverImage = user.coverImage;
+			session.user.signupCompleted = user.signupCompleted;
+			
 			return session;
-		}
+		},
+
 	},
-	pages:{
-		//'signIn': '/auth/signin'
-	}
+	pages: {
+		'signIn': '/signin'
+	},
 };
 
 export default NextAuth(authOptions);

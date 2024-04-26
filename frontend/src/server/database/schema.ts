@@ -49,6 +49,7 @@ export const users = pgTable("user", {
 	premium: boolean("premium").notNull().default(false),
 	premiumCredits: integer("premiumCredits").notNull().default(Number(process.env.DAILY_PREMIUM_CREDITS ?? 50)),
 	generations: integer("generations").notNull().default(Number(process.env.DAILY_FREE_USER_GENERATIONS ?? 25)),
+	signupCompleted: boolean("signupCompleted").notNull().default(false),
 })
 
 export const ips = pgTable("ip", {

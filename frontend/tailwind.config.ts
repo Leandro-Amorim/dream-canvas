@@ -83,12 +83,18 @@ const config = {
 					'100%': {
 						transform: 'rotate(0deg)',
 					}
+				},
+				"login-image": {
+					'0%': { transform: 'scale(1)', opacity: '1' },
+					'80%': { opacity: '1' },
+					'100%': { transform: 'scale(1.08)', opacity: '0' }
 				}
 			},
 			animation: {
 				"accordion-down": "accordion-down 0.2s ease-out",
 				"accordion-up": "accordion-up 0.2s ease-out",
 				'bell': 'bell 2.5s ease-in-out infinite',
+				'login-image': 'login-image 5s linear'
 			},
 		},
 	},
