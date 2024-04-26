@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { IconLayoutGrid, IconLayoutList, IconLoader2, IconPhotoPlus, IconTrash } from "@tabler/icons-react";
-import { NextPageContext } from "next";
+import { GetServerSideProps } from "next";
 import { getServerSession } from "next-auth";
 import { useCallback, useMemo, useState } from "react";
 import { authOptions } from "./api/auth/[...nextauth]";
@@ -22,9 +22,8 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { APIResponse as DeleteAPIResponse } from "./api/images/delete";
 import { useRouter } from "next/router";
 
-export async function getServerSideProps(context: NextPageContext) {
+export const getServerSideProps = (async function (context) {
 
-	//@ts-ignore
 	const session = await getServerSession(context.req, context.res, authOptions);
 
 	if (session?.user === undefined) {
@@ -39,29 +38,35 @@ export async function getServerSideProps(context: NextPageContext) {
 	return {
 		props: {},
 	}
-}
+}) satisfies GetServerSideProps<{}>;
 
 export default function History() {
 
 	const router = useRouter();
 
-	async function fetchImages({ pageParam }: { pageParam?: string }): Promise<APIResponse> {
-		return await fetchData('/api/images/get-images', { cursor: pageParam });
-	}
+	const [search, setSearch] = useState('');
+	const debouncedSearch = useDebounce(search, 500);
+
+	const fetchImages = useCallback(async ({ pageParam }: { pageParam?: string }): Promise<APIResponse> => {
+		return await fetchData('/api/images/get-images', { search, cursor: pageParam });
+	}, [search]);
 
 	const { isFetching, isFetchingNextPage, data, fetchNextPage, hasNextPage, refetch } = useInfiniteQuery({
-		queryKey: ['images'],
+		queryKey: ['images', debouncedSearch],
 		queryFn: fetchImages,
-		//@ts-expect-error
+		//@ts-ignore
 		getNextPageParam: (lastPage) => (lastPage.status === 'success' && lastPage.data.length > 0) ? imagesCursor.serialize(lastPage.data.at(-1)) : undefined,
 		initialPageParam: undefined,
 	});
 
+	const imageList = useMemo(() => {
+		return data?.pages.flatMap((page) => {
+			return (page.status === 'success' ? page.data : [])
+		}) ?? [];
+	}, [data]);
+
 	const [mode, setMode] = useState('grid');
 	const [selected, setSelected] = useState<string[]>([]);
-
-	const [search, setSearch] = useState('');
-	const debouncedSearch = useDebounce(search, 500);
 
 	const [modalOpen, setModalOpen] = useState(false);
 	const [toDelete, setToDelete] = useState<string[]>([]);
@@ -79,14 +84,6 @@ export default function History() {
 		setToDelete([]);
 		setModalOpen(false);
 	}, [refetch]);
-
-	const imageList = useMemo(() => {
-		return data?.pages.flatMap((page) => {
-			return (page.status === 'success' ? page.data : [])
-		}).filter((image) => {
-			return image.prompt.prompt.toLowerCase().includes(debouncedSearch.toLowerCase());
-		}) ?? []
-	}, [data, debouncedSearch]);
 
 	return (
 		<Main>
@@ -130,6 +127,12 @@ export default function History() {
 
 			{
 				<InfiniteScroll loadMore={() => { !isFetching && fetchNextPage() }} hasMore={hasNextPage} className="mt-6 w-full" loader={<div className="w-full flex justify-center" key={0}><IconLoader2 className="size-10 text-primary animate-spin mt-8 mb-2" /></div>}>
+					{
+						imageList.length === 0 && !isFetching &&
+						<div className="w-full flex gap-1 items-center justify-center italic text-gray-400 text-lg" key={0}>
+							No results found for your search.
+						</div>
+					}
 					{
 						mode === 'grid' ?
 							<PhotoProvider maskOpacity={0.97} speed={() => 300} easing={() => 'cubic-bezier(0.215, 0.61, 0.355, 1)'}>

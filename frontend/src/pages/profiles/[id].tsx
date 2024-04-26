@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LockClosedIcon } from "@radix-ui/react-icons";
 import { IconDots, IconEdit, IconShare, IconUser, IconUserCancel, IconUserCheck, IconUsersMinus } from "@tabler/icons-react";
-import { NextPageContext } from "next";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { getServerSession } from "next-auth";
@@ -28,9 +28,8 @@ import { blockUserModalState, shareModalState, signinModalOpenState } from "@/li
 import { useSetRecoilState } from "recoil";
 import { useRouter } from "next/router";
 
-export async function getServerSideProps(context: NextPageContext) {
+export const getServerSideProps = (async function (context) {
 
-	//@ts-ignore
 	const session = await getServerSession(context.req, context.res, authOptions);
 	const userId = session?.user.id ?? '';
 	let profileId = context.query.id;
@@ -54,9 +53,9 @@ export async function getServerSideProps(context: NextPageContext) {
 			originalProfile: profile,
 		},
 	}
-}
+}) satisfies GetServerSideProps<{ originalProfile: IProfile | null }>;
 
-export default function Profile({ originalProfile }: { originalProfile: IProfile | null }) {
+export default function Profile({ originalProfile }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
 	const router = useRouter();
 	const session = useSession();

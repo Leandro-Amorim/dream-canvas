@@ -1,6 +1,6 @@
 import PostContent from "@/components/explore/PostContent";
 import Main from "@/components/layout/Main";
-import { NextPageContext } from "next";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getServerSession } from "next-auth";
 import { useRouter } from "next/router";
 import { useCallback } from "react"
@@ -14,7 +14,7 @@ const LottieAnimation = dynamic(() => import('@/components/layout/LottieAnimatio
 import sadRobot from "$/sad-robot.json";
 import dynamic from "next/dynamic";
 
-export default function PostPage({ originalPost }: { originalPost: IPost | null }) {
+export default function PostPage({ originalPost }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
 	const router = useRouter();
 
@@ -59,9 +59,8 @@ export default function PostPage({ originalPost }: { originalPost: IPost | null 
 	)
 }
 
-export async function getServerSideProps(context: NextPageContext) {
+export const getServerSideProps = (async function (context){
 
-	//@ts-ignore
 	const session = await getServerSession(context.req, context.res, authOptions);
 	const userId = session?.user.id ?? '';
 	const postId = context.query.id;
@@ -81,4 +80,4 @@ export async function getServerSideProps(context: NextPageContext) {
 			originalPost: post,
 		},
 	}
-}
+}) satisfies GetServerSideProps<{ originalPost: IPost | null }>

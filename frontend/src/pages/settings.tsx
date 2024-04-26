@@ -1,5 +1,5 @@
 import Main from "@/components/layout/Main";
-import { NextPageContext } from "next";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
 import Link from "next/link";
@@ -31,9 +31,8 @@ import { users } from "@/server/database/schema";
 import { eq } from "drizzle-orm";
 import { ZodError, z } from 'zod';
 
-export async function getServerSideProps(context: NextPageContext) {
+export const getServerSideProps = (async function (context) {
 
-	//@ts-ignore
 	const session = await getServerSession(context.req, context.res, authOptions);
 
 	if (session?.user === undefined) {
@@ -59,7 +58,15 @@ export async function getServerSideProps(context: NextPageContext) {
 	return {
 		props: { profile },
 	}
-}
+}) satisfies GetServerSideProps<{
+	profile: {
+		id: string;
+		name: string;
+		description: string;
+		image: string;
+		coverImage: string;
+	} | undefined
+}>;
 
 type tabType = 'profile' | 'billing' | 'blocklist';
 
@@ -69,15 +76,7 @@ const options = {
 	blocklist: 'Blocklist',
 }
 
-export default function Settings({ profile }: {
-	profile: {
-		id: string;
-		name: string;
-		description: string;
-		image: string;
-		coverImage: string;
-	} | undefined
-}) {
+export default function Settings({ profile }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
 	const router = useRouter();
 	const [active, setActive] = useState('profile' as tabType);
@@ -313,7 +312,7 @@ export default function Settings({ profile }: {
 												profilePending && <IconLoader2 className="animate-spin size-5" />
 											}
 											Save</Button>
-									</CardFooter> 
+									</CardFooter>
 								</Card>
 							)
 						}

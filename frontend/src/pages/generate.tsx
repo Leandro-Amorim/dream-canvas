@@ -3,7 +3,7 @@ import ModifierModal from "@/components/generate/ModifierModal";
 import ModifierSection from "@/components/generate/ModifierSection";
 import PromptSection from "@/components/generate/PromptSection";
 import Main from "@/components/layout/Main";
-import { NextPageContext } from "next";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
 import isUUID from 'is-uuid';
@@ -18,9 +18,8 @@ import { modelState, modelTypeState, negativePromptState, promptState, settingsS
 import { useSession } from "next-auth/react";
 import { modelArray, models } from "@/data/models";
 
-export async function getServerSideProps(context: NextPageContext) {
+export const getServerSideProps = (async function (context) {
 
-	//@ts-ignore
 	const session = await getServerSession(context.req, context.res, authOptions);
 	const userId = session?.user.id ?? NULL_UUID;
 
@@ -63,9 +62,9 @@ export async function getServerSideProps(context: NextPageContext) {
 			templateImage
 		},
 	}
-}
+}) satisfies GetServerSideProps<{ templateImage: Omit<IImage, 'userId'> | null }>;
 
-export default function Home({ templateImage }: { templateImage: Omit<IImage, 'userId'> | null }) {
+export default function Home({ templateImage }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
 	const session = useSession();
 	const userIsPremium = useMemo(() => {

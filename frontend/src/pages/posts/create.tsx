@@ -10,7 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { IconCirclePlus, IconCrown, IconLoader2, IconPhotoPlus, IconX } from "@tabler/icons-react";
 import Image from "next/image";
-import { NextPageContext } from "next";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { db } from "@/server/database/database";
@@ -40,9 +40,8 @@ import update from 'immutability-helper';
 import { APIResponse as CreatePostAPIResponse } from "../api/posts/create";
 import { useRouter } from "next/router";
 
-export async function getServerSideProps(context: NextPageContext) {
+export const getServerSideProps = (async function (context) {
 
-	//@ts-ignore
 	const session = await getServerSession(context.req, context.res, authOptions);
 	if (session?.user === undefined) {
 		return {
@@ -67,7 +66,7 @@ export async function getServerSideProps(context: NextPageContext) {
 			defaultImages,
 		},
 	}
-}
+}) satisfies GetServerSideProps<{ defaultImages: IImage[] }>;
 
 export const formSchema = z.object({
 	title: z.string().max(128, {
@@ -80,7 +79,7 @@ export const formSchema = z.object({
 	hidePrompt: z.boolean(),
 })
 
-export default function CreatePost({ defaultImages }: { defaultImages: IImage[] }) {
+export default function CreatePost({ defaultImages }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
 	const router = useRouter();
 
@@ -123,7 +122,7 @@ export default function CreatePost({ defaultImages }: { defaultImages: IImage[] 
 	function removeImage(image: IImage) {
 		setImages(images.filter((i) => i.id !== image.id));
 	}
-	
+
 	const reorderImage = useCallback((dragIndex: number, hoverIndex: number) => {
 		setImages((prevImages) =>
 			update(prevImages, {
