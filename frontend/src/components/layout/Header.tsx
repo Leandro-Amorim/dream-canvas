@@ -3,12 +3,14 @@ import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuL
 import Link from "next/link";
 import { Button } from "../ui/button";
 import Notifications from "./Notifications";
-import { IconMenu2, IconUser } from "@tabler/icons-react";
+import { IconHelp, IconMenu2, IconUser } from "@tabler/icons-react";
 import { useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { signOut, useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
+import { Tooltip } from "../ui/tooltip";
+import { TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export default function Header() {
 
@@ -119,6 +121,20 @@ export default function Header() {
 							</DropdownMenuTrigger>
 							<DropdownMenuContent align="end">
 								<DropdownMenuLabel>My Account</DropdownMenuLabel>
+								<DropdownMenuItem className="py-1 hover:!bg-popover" asChild>
+									<div className="flex justify-between">
+										<div className="text-xs flex items-center gap-1">
+											Credits
+											<Tooltip>
+												<TooltipTrigger className="text-muted-foreground"><IconHelp size={16}/></TooltipTrigger>
+												<TooltipContent className="bg-gray-950 text-sm">
+													<p>You can use premium credits to prioritise your generation. You earn premium credits daily.</p>
+												</TooltipContent>
+											</Tooltip>
+										</div>
+										<span className="text-xs">{session.data?.user.premiumCredits}</span>
+									</div>
+								</DropdownMenuItem>
 								<DropdownMenuSeparator />
 								<DropdownMenuItem className="cursor-pointer" asChild>
 									<Link href="/profiles/me">Profile</Link>

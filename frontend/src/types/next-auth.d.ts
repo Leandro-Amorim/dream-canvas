@@ -7,6 +7,7 @@ declare module "next-auth" {
 	interface Session {
 		user: {
 			premium: boolean,
+			premiumCredits: number,
 			id: string,
 			description: string,
 			coverImage: string,

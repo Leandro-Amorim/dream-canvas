@@ -66,3 +66,30 @@ export const postImages = pgTable("postImages", {
 		compoundKey: primaryKey({ columns: [row.postId, row.imageId] }),
 	})
 );
+
+export const users = pgTable("user", {
+	id: text("id").notNull().primaryKey(),
+	customerId: text("customerId"),
+	name: text("name").notNull().default(''),
+	description: text("description").notNull().default(''),
+	email: text("email").notNull(),
+	emailVerified: timestamp("emailVerified", { mode: "date", withTimezone: true }),
+	image: text("image").notNull().default(''),
+	coverImage: text("coverImage").notNull().default(''),
+	premium: boolean("premium").notNull().default(false),
+	premiumCredits: integer("premiumCredits").notNull().default(Number(process.env.DAILY_PREMIUM_CREDITS ?? 50)),
+	generations: integer("generations").notNull().default(Number(process.env.DAILY_FREE_USER_GENERATIONS ?? 25)),
+	signupCompleted: boolean("signupCompleted").notNull().default(false),
+})
+
+export const ips = pgTable("ip", {
+	address: text("address").notNull().primaryKey(),
+	lastGeneration: timestamp("lastGeneration", { mode: "date", withTimezone: true }).notNull().defaultNow(),
+	generations: integer("generations").notNull().default(Number(process.env.DAILY_FREE_IP_GENERATIONS ?? 5)),
+})
+
+export const system = pgTable("system", {
+	id: integer('id').primaryKey().default(1),
+	generations: integer("generations").notNull().default(Number(process.env.SYSTEM_DAILY_FREE_GENERATIONS ?? 200)),
+	resetedAt: timestamp("resetedAt", { mode: "date", withTimezone: true }).notNull().defaultNow(),
+})

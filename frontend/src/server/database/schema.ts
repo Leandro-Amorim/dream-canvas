@@ -61,6 +61,7 @@ export const ips = pgTable("ip", {
 export const system = pgTable("system", {
 	id: integer('id').primaryKey().default(1),
 	generations: integer("generations").notNull().default(Number(process.env.SYSTEM_DAILY_FREE_GENERATIONS ?? 200)),
+	resetedAt: timestamp("resetedAt", { mode: "date", withTimezone: true }).notNull().defaultNow(),
 })
 
 export const freeQueue = pgTable("freeQueue", {
