@@ -6,7 +6,7 @@ import { authOptions } from '../auth/[...nextauth]';
 import { follows, notifications } from '@/server/database/schema';
 import { db } from '@/server/database/database';
 import { and, eq } from 'drizzle-orm';
-import sendSocket from '@/server/sendSocket';
+import sendSocket from '@/server/sendNotificationSocket';
 
 export type APIResponse = GenericAPIResponse<{ success: boolean }>;
 

@@ -71,6 +71,7 @@ export const freeQueue = pgTable("freeQueue", {
 	type: text('type', { enum: ['ANONYMOUS', 'FREE'] }).notNull(),
 	userId: text('userId'),
 	ipAddress: text('ipAddress'),
+	apiId: text('apiId').unique(),
 })
 
 export const priorityQueue = pgTable("priorityQueue", {
@@ -80,7 +81,8 @@ export const priorityQueue = pgTable("priorityQueue", {
 	createdAt: timestamp('createdAt', { mode: 'date', withTimezone: true }).notNull().defaultNow(),
 	userId: text('userId').notNull(),
 	premium: boolean('premium').notNull(),
-	cost: integer('cost').default(0).notNull()
+	cost: integer('cost').default(0).notNull(),
+	apiId: text('apiId').unique(),
 })
 
 export const images = pgTable("images", {
@@ -89,7 +91,7 @@ export const images = pgTable("images", {
 	width: integer('width').notNull(),
 	height: integer('height').notNull(),
 	prompt: json('prompt').notNull().$type<GenerationRequest>(),
-	userId: text('userId').notNull().references(() => users.id, { onDelete: "cascade" }),
+	userId: text('userId').references(() => users.id, { onDelete: "cascade" }),
 	createdAt: timestamp('createdAt', { mode: 'string', withTimezone: true }).notNull().defaultNow(),
 })
 

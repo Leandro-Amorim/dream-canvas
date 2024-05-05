@@ -8,6 +8,8 @@ import { freeQueue, ips, priorityQueue, system, users } from '@/server/database/
 import { count, eq } from 'drizzle-orm';
 import requestIp from 'request-ip';
 import calculateCost from '@/server/generation/calculateCost';
+import sendSocket from '@/server/sendGenerationSocket';
+import getSocketAuth from '@/server/getSocketAuth';
 
 export type APIResponse = ErrorResponse | DataResponse;
 
@@ -19,7 +21,8 @@ interface DataResponse {
 	status: 'success',
 	data: {
 		id: string,
-		type: 'free' | 'priority'
+		type: 'free' | 'priority',
+		socketAuth: string,
 	}
 }
 
@@ -94,11 +97,14 @@ export default async function handler(req: APIRequest, res: NextApiResponse) {
 						prompt: req.body,
 					}).returning({ id: freeQueue.id }))[0];
 
+					sendSocket('free');
+
 					return res.status(200).json({
 						status: 'success',
 						data: {
 							id: queueEntry.id,
-							type: 'free'
+							type: 'free',
+							socketAuth: getSocketAuth(queueEntry.id)
 						}
 					} satisfies APIResponse);
 				}
@@ -121,12 +127,14 @@ export default async function handler(req: APIRequest, res: NextApiResponse) {
 						prompt: req.body,
 					}).returning({ id: freeQueue.id }))[0];
 
+					sendSocket('free');
 
 					return res.status(200).json({
 						status: 'success',
 						data: {
 							id: queueEntry.id,
 							type: 'free',
+							socketAuth: getSocketAuth(queueEntry.id)
 						}
 					} satisfies APIResponse);
 				}
@@ -151,11 +159,14 @@ export default async function handler(req: APIRequest, res: NextApiResponse) {
 					prompt: req.body,
 				}).returning({ id: priorityQueue.id }))[0];
 
+				sendSocket('priority');
+
 				return res.status(200).json({
 					status: 'success',
 					data: {
 						id: queueEntry.id,
 						type: 'priority',
+						socketAuth: getSocketAuth(queueEntry.id)
 					},
 				} satisfies APIResponse);
 			}
@@ -170,11 +181,14 @@ export default async function handler(req: APIRequest, res: NextApiResponse) {
 				prompt: req.body,
 			}).returning({ id: priorityQueue.id }))[0];
 
+			sendSocket('priority');
+
 			return res.status(200).json({
 				status: 'success',
 				data: {
 					id: queueEntry.id,
-					type: 'priority'
+					type: 'priority',
+					socketAuth: getSocketAuth(queueEntry.id)
 				},
 			} satisfies APIResponse);
 		}

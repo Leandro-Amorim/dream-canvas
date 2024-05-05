@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]';
 import { GenericAPIResponse } from '@/types/api';
 import protectAPI from '@/server/protectAPI';
-import { sign } from 'jsonwebtoken';
+import getSocketAuth from '@/server/getSocketAuth';
 
 export type APIResponse = GenericAPIResponse<{ token: string }>;
 
@@ -15,13 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		const session = await getServerSession(req, res, authOptions);
 		const userId = session?.user.id ?? '';
 
-		const jwtData = sign({
-			data: {
-				id: userId,
-			}
-		}, (process.env.JWT_SECRET ?? ''), {
-			expiresIn: '1h',
-		});
+		const jwtData = getSocketAuth(userId);
 
 		return res.status(200).json({
 			status: 'success',

@@ -1,7 +1,7 @@
 import { generationStatusState, generationToastState } from "@/lib/atoms"
 import { fetchData } from "@/lib/utils";
 import { APIResponse } from "@/pages/api/generation/get_status";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { useEffect, useMemo } from "react";
 import { useRecoilState, useRecoilValue } from "recoil"
@@ -15,6 +15,7 @@ import {
 import { Button } from "../ui/button";
 import { IconCircleCheckFilled, IconCircleXFilled, IconLoader2 } from "@tabler/icons-react";
 import Link from "next/link";
+import { Socket, io } from "socket.io-client";
 
 export default function GenerationStatusPoller() {
 
@@ -22,29 +23,49 @@ export default function GenerationStatusPoller() {
 	const [generationStatus, setGenerationStatus] = useRecoilState(generationStatusState);
 	const generationToast = useRecoilValue(generationToastState);
 
-	const { data } = useQuery<APIResponse>({
-		queryKey: [generationStatus.id, generationStatus.type, generationStatus.status],
-		queryFn: async () => {
-			return fetchData('/api/generation/get_status', { id: generationStatus.id, type: generationStatus.type });
-		},
-		refetchInterval: 1500,
-		enabled: generationStatus.id !== null && generationStatus.status !== 'COMPLETED' && generationStatus.status !== 'FAILED',
-	});
 	useEffect(() => {
-		if (data && data.status === 'success') {
-			setGenerationStatus((prev) => {
-				return {
-					...prev,
-					status: data.data.status,
-					data: {
-						url: data.data.url,
-						refunded: data.data.refunded
-					}
-				}
-			})
+		let socket: Socket;
+
+		function onStatusUpdate() {
+			checkStatus();
 		}
 
-	}, [data, setGenerationStatus, generationStatus.id]);
+		if (generationStatus.socketAuth) {
+			socket = io(process.env.NEXT_PUBLIC_QUEUE_SERVER ?? '', {
+				extraHeaders: {
+					authorization: `bearer ${generationStatus.socketAuth}`
+				},
+			});
+			socket.on('status_update', onStatusUpdate);
+		}
+
+		return () => {
+			socket?.off('status_update', onStatusUpdate);
+			socket?.disconnect();
+		};
+
+	}, [generationStatus.socketAuth])
+
+
+	const { mutateAsync: checkStatus } = useMutation({
+		mutationFn: async () => {
+			return fetchData<APIResponse>('/api/generation/get_status', { id: generationStatus.id, type: generationStatus.type });
+		},
+		onSuccess(data) {
+			if (data && data.status === 'success') {
+				setGenerationStatus((prev) => {
+					return {
+						...prev,
+						status: data.data.status,
+						data: {
+							url: data.data.url,
+							refunded: data.data.refunded
+						}
+					}
+				})
+			}
+		},
+	})
 
 	const isGenerationPage = useMemo(() => {
 		return router.asPath.startsWith('/generate');

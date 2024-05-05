@@ -7,7 +7,6 @@ export interface ServerToClientEvents {
 
 export interface ClientToServerEvents {
 	new_notification: (userIds: string[], cb: (success: boolean) => void) => void;
-	connect_error: (err: Error) => void;
 }
 
 export interface InterServerEvents {
@@ -24,5 +23,17 @@ export interface SocketRequest extends IncomingMessage {
 }
 
 export interface SocketExt extends Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData> {
+	request: SocketRequest
+}
+
+export interface GenerationServerToClientEvents {
+	status_update: () => void;
+}
+
+export interface GenerationClientToServerEvents {
+	new_generation: (type: 'free' | 'premium', cb: (success: boolean) => void) => void;
+}
+
+export interface GenerationSocketExt extends Socket<GenerationClientToServerEvents, GenerationServerToClientEvents, InterServerEvents, SocketData> {
 	request: SocketRequest
 }

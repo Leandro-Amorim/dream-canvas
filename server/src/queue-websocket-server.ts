@@ -1,12 +1,18 @@
-import { IncomingMessage, createServer } from "node:http";
 import { Server } from "socket.io";
+import { GenerationClientToServerEvents, GenerationServerToClientEvents, GenerationSocketExt, InterServerEvents, SocketData } from "./types/sockets";
+import { IncomingMessage, createServer } from "http";
 import jwt from "jsonwebtoken";
-import type { ClientToServerEvents, InterServerEvents, ServerToClientEvents, SocketData, SocketExt } from "./types/sockets";
+import { processFreeQueue, processPremiumQueue } from "./queue-processor";
 
-const port = 3001;
+const port = 3002;
 const httpServer = createServer();
 
-export const io = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>(httpServer, {
+export const processing = {
+	free: false,
+	priority: false
+}
+
+export const io = new Server<GenerationClientToServerEvents, GenerationServerToClientEvents, InterServerEvents, SocketData>(httpServer, {
 	cors: {
 		origin: process.env.PUBLIC_URL ?? '',
 		methods: ["GET", "POST"],
@@ -46,25 +52,29 @@ io.engine.use((req: IncomingMessage, res: Response, next: (error?: Error) => voi
 	});
 });
 
-io.on('connection', (socket: SocketExt) => {
-
+io.on('connection', (socket: GenerationSocketExt) => {
 	const socketUserId = socket.request.user?.id;
 	if (socketUserId && socketUserId !== 'server') {
-		socket.join(`user:${socketUserId}`);
+		socket.join(`generation:${socketUserId}`);
 	}
 
-	socket.on('new_notification', (userIds, cb) => {
+	socket.on('new_generation', (type, cb) => {
 		if (socketUserId === 'server') {
-			for (const userId of userIds) {
-				io.to(`user:${userId}`).emit("notification");
+			if (type === 'free') {
+				processing.free = true;
+			}
+			else {
+				processing.priority = true;
 			}
 			cb(true);
 		}
 	})
 });
 
-export const startNotificationsServer = () => {
+export const startQueueProcessing = async () => {
 	httpServer.listen(port, () => {
-		console.log(`Notifications Server is running at: http://localhost:${port}`);
+		console.log(`Queue Server is running at: http://localhost:${port}`);
 	});
+	processFreeQueue();
+	processPremiumQueue();
 }

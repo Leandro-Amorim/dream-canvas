@@ -1,7 +1,7 @@
 import { sign } from "jsonwebtoken";
 import { io } from "socket.io-client";
 
-export default function sendSocket(ids: string[]) {
+export default function sendSocket(type: 'free' | 'priority') {
 
 	const jwtData = sign({
 		data: {
@@ -11,7 +11,7 @@ export default function sendSocket(ids: string[]) {
 		expiresIn: '1h',
 	});
 
-	const socket = io(process.env.NEXT_PUBLIC_WEBSOCKET_SERVER ?? '', {
+	const socket = io(process.env.NEXT_PUBLIC_QUEUE_SERVER ?? '', {
 		extraHeaders: {
 			authorization: `bearer ${jwtData}`
 		},
@@ -20,7 +20,7 @@ export default function sendSocket(ids: string[]) {
 	socket.connect();
 
 	socket.once('connect', () => {
-		socket.emitWithAck('new_notification', ids).then(() => {
+		socket.emitWithAck('new_generation', type).then(() => {
 			socket.disconnect();
 		})
 	});

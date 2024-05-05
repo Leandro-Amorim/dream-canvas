@@ -14,14 +14,14 @@ export const settingsState = atom({
 	key: 'settingsState',
 	default: {
 		size: 'portrait',
-		samplingMethod: 'euler_a',
+		samplingMethod: 'ddim',
 		seed: -1,
 		steps: 30,
 		scale: 10,
 		highPriority: false,
 		hires: {
 			enabled: false,
-			upscaler: 'esrgan_4x',
+			upscaler: 'Latent',
 			factor: 2,
 			steps: 10,
 			denoisingStrength: 0.5
@@ -47,6 +47,7 @@ export const generationStatusState = atom({
 	key: 'generationStatusState',
 	default: {
 		id: null as null | string,
+		socketAuth: null as null | string,
 		type: null as null | 'free' | 'priority',
 		status: null as null | 'QUEUED' | 'PROCESSING' | 'COMPLETED' | 'FAILED',
 		data: null as null | {

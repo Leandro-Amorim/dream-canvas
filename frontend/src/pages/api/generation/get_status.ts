@@ -4,6 +4,7 @@ import { freeQueue, priorityQueue, users, } from '@/server/database/schema';
 import { eq } from 'drizzle-orm';
 
 import { APIRequest, GenericAPIResponse } from '@/types/api';
+import parseS3Url from '@/server/s3/parseS3Url';
 
 export type APIResponse = GenericAPIResponse<{ status: 'QUEUED' | 'PROCESSING' | 'COMPLETED' | 'FAILED' | null, url: string, refunded: boolean }>
 
@@ -23,7 +24,7 @@ export default async function handler(req: APIRequest<{ type: 'free' | 'priority
 				status: 'success',
 				data: {
 					status: row?.status ?? null,
-					url: row?.status === 'COMPLETED' ? row.id : '',
+					url: row?.status === 'COMPLETED' ? parseS3Url(`images/${row.id}`) : '',
 					refunded: false
 				}
 			} satisfies APIResponse);
@@ -49,7 +50,7 @@ export default async function handler(req: APIRequest<{ type: 'free' | 'priority
 				status: 'success',
 				data: {
 					status: row?.status ?? null,
-					url: row?.status === 'COMPLETED' ? row.id : '',
+					url: row?.status === 'COMPLETED' ? parseS3Url(`images/${row.id}`) : '',
 					refunded
 				}
 			} satisfies APIResponse);

@@ -14,15 +14,26 @@
 	"license": "ISC",
 	"devDependencies": {
 		"@types/jsonwebtoken": "^9.0.6",
+		"@types/koa": "^2.15.0",
+		"@types/koa__router": "^12.0.4",
+		"@types/koa-bodyparser": "^4.3.12",
 		"@types/node": "^20.12.2",
+		"@types/pg": "^8.11.5",
 		"nodemon": "^3.1.0",
 		"rimraf": "^5.0.5",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.4.3"
 	},
 	"dependencies": {
+		"@aws-sdk/client-s3": "^3.564.0",
+		"@koa/router": "^12.0.1",
 		"dotenv": "^16.4.5",
+		"drizzle-orm": "^0.30.9",
 		"jsonwebtoken": "^9.0.2",
+		"koa": "^2.15.3",
+		"koa-bodyparser": "^4.4.1",
+		"nanoid": "^5.0.7",
+		"pg": "^8.11.5",
 		"socket.io": "^4.7.5"
 	}
 }

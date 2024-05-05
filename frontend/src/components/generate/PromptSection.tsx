@@ -71,6 +71,7 @@ export default function PromptSection() {
 				type: null,
 				status: null,
 				data: null,
+				socketAuth: null,
 			});
 		},
 		onSuccess(data) {
@@ -80,6 +81,7 @@ export default function PromptSection() {
 					type: data.data.type,
 					data: null,
 					status: 'QUEUED',
+					socketAuth: data.data.socketAuth
 				})
 				setGenerationToast({
 					open: true,

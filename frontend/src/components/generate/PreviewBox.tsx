@@ -10,6 +10,7 @@ import { IconLoader2 } from "@tabler/icons-react";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import Image from "next/image";
+import { PhotoProvider, PhotoView } from "react-photo-view";
 
 const LottieAnimation = dynamic(() => import('../layout/LottieAnimation'), { ssr: false });
 
@@ -63,7 +64,11 @@ function PreviewContent({ error = false, loading = false, imageUrl, title, descr
 	if (imageUrl) {
 		return (
 			<div className="inset-0 absolute overflow-hidden">
-				<Image src={imageUrl} fill={true} alt="Test" className={`object-contain`} />
+				<PhotoProvider maskOpacity={0.97} speed={() => 300} easing={() => 'cubic-bezier(0.215, 0.61, 0.355, 1)'}>
+					<PhotoView src={imageUrl}>
+						<Image src={imageUrl} fill={true} alt="Test" className={`object-contain cursor-pointer`} />
+					</PhotoView>
+				</PhotoProvider>
 			</div>
 		)
 	}

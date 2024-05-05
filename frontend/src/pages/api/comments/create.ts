@@ -7,7 +7,7 @@ import { commentSubscriptions, comments, notifications, posts } from '@/server/d
 import { db } from '@/server/database/database';
 import { and, eq, ne } from 'drizzle-orm';
 import { NotificationType } from '@/types/database';
-import sendSocket from '@/server/sendSocket';
+import sendSocket from '@/server/sendNotificationSocket';
 
 export type APIResponse = GenericAPIResponse<{ success: true }>;
 

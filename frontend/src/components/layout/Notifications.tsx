@@ -99,7 +99,7 @@ export default function Notifications() {
 		fetchData<GetAuthApiResponse>('/api/notifications/get-auth', {}).then((data) => {
 			console.log('AS');
 			if (data.status === 'success') {
-				socket = io(process.env.NEXT_PUBLIC_WEBSOCKET_SERVER ?? '', {
+				socket = io(process.env.NEXT_PUBLIC_NOTIFICATION_SERVER ?? '', {
 					extraHeaders: {
 						authorization: `bearer ${data.data.token}`
 					},
