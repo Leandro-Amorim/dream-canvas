@@ -34,8 +34,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				}
 			],
 			customer_email: customerId ? undefined : session?.user.email ?? '',
-			success_url: `${process.env.PUBLIC_URL}/checkout-success`,
-			cancel_url: process.env.PUBLIC_URL ?? '',
+			success_url: `${process.env.NEXT_PUBLIC_URL}/checkout-success`,
+			cancel_url: process.env.NEXT_PUBLIC_URL ?? '',
 			billing_address_collection: 'required',
 		});
 

@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import { blockUserModalState, shareModalState, signinModalOpenState } from "@/lib/atoms";
 import { useSetRecoilState } from "recoil";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 export const getServerSideProps = (async function (context) {
 
@@ -187,6 +188,23 @@ export default function Profile({ originalProfile }: InferGetServerSidePropsType
 					</div>
 					:
 					<>
+						<Head>
+							<title key="title">{`${profile.name} — Dream Canvas`}</title>
+							<meta key={'meta-title'} name="title" content={`${profile.name} — Dream Canvas`} />
+							<meta key={'meta-description'} name="description" content={`${profile.description || 'No description provided.'}`} />
+
+							<meta key={'og-url'} name="og:url" property="og:url" content={`${process.env.NEXT_PUBLIC_URL}/profiles/${profile.id}`} />
+							<meta key={'og-type'} name="og:type" property="og:type" content="website" />
+							<meta key={'og-title'} name="og:title" property="og:title" content={`${profile.name} — Dream Canvas`} />
+							<meta key={'og-description'} name="og:description" property="og:description" content={`${profile.description || 'No description provided.'}`} />
+							<meta key={'og-image'} name="og:image" property="og:image" content={profile.image || `${process.env.NEXT_PUBLIC_URL}/card1.jpg`} />
+
+							<meta key={'twitter-card'} name="twitter:card" property="twitter:card" content="summary_large_image" />
+							<meta key={'twitter-url'} name="twitter:url" property="twitter:url" content={`${process.env.NEXT_PUBLIC_URL}/profiles/${profile.id}`} />
+							<meta key={'twitter-title'} name="twitter:title" property="twitter:title" content={`${profile.name} — Dream Canvas`} />
+							<meta key={'twitter-description'} name="twitter:description" property="twitter:description" content={`${profile.description || 'No description provided.'}`} />
+							<meta key={'twitter-image'} name="twitter:image" property="twitter:image" content={profile.image || `${process.env.NEXT_PUBLIC_URL}/card1.jpg`} />
+						</Head>
 						<div className="w-full flex flex-col items-center overflow-hidden relative">
 							<div className="w-full h-[180px] absolute bg-secondary/90 rounded-t-lg">
 								{

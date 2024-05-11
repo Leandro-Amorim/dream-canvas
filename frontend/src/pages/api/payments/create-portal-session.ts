@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 		const portalSession = await stripe.billingPortal.sessions.create({
 			customer: customerId,
-			return_url: `${process.env.PUBLIC_URL}/settings#billing`,
+			return_url: `${process.env.NEXT_PUBLIC_URL}/settings#billing`,
 		});
 
 		if (portalSession.url === null) { throw new Error('No url found'); }

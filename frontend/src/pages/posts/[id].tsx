@@ -3,7 +3,7 @@ import Main from "@/components/layout/Main";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { getServerSession } from "next-auth";
 import { useRouter } from "next/router";
-import { useCallback } from "react"
+import { useCallback, useMemo } from "react"
 import { authOptions } from "../api/auth/[...nextauth]";
 import { APIResponse, getPost } from "../api/posts/get-post";
 import { IPost } from "@/types/database";
@@ -13,6 +13,7 @@ import { fetchData } from "@/lib/utils";
 const LottieAnimation = dynamic(() => import('@/components/layout/LottieAnimation'), { ssr: false });
 import sadRobot from "$/sad-robot.json";
 import dynamic from "next/dynamic";
+import Head from "next/head";
 
 export default function PostPage({ originalPost }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
@@ -38,6 +39,14 @@ export default function PostPage({ originalPost }: InferGetServerSidePropsType<t
 
 	const post = data?.status === 'success' && data.data.post ? data.data.post : null;
 
+	const { postName, postDescription, authorName } = useMemo(() => {
+		return {
+			postName: post?.title || 'Untitled Post',
+			postDescription: post?.description || 'No description provided.',
+			authorName: (post?.anonymous || post?.orphan) ? 'Anonymous User' : post?.author?.name || 'Anonymous User',
+		}
+	}, [post]);
+
 	return (
 		<Main>
 			<div className="w-full mt-6">
@@ -51,7 +60,27 @@ export default function PostPage({ originalPost }: InferGetServerSidePropsType<t
 							</div>
 						</div>
 						:
-						<PostContent onCancel={onCancel} post={post} refetchPost={refetch} />
+						<>
+							<Head>
+								<title key="title">{`${postName} by ${authorName} — Dream Canvas`}</title>
+								<meta key={'meta-title'} name="title" content={`${postName} by ${authorName} — Dream Canvas`} />
+								<meta key={'meta-description'} name="description" content={postDescription} />
+
+								<meta key={'og-url'} name="og:url" property="og:url" content={`${process.env.NEXT_PUBLIC_URL}/posts/${post.id}`} />
+								<meta key={'og-type'} name="og:type" property="og:type" content="website" />
+								<meta key={'og-title'} name="og:title" property="og:title" content={`${postName} by ${authorName} — Dream Canvas`} />
+								<meta key={'og-description'} name="og:description" property="og:description" content={postDescription} />
+								<meta key={'og-image'} name="og:image" property="og:image" content={post.images?.[0]?.url ?? ''} />
+
+								<meta key={'twitter-card'} name="twitter:card" property="twitter:card" content="summary_large_image" />
+								<meta key={'twitter-url'} name="twitter:url" property="twitter:url" content={`${process.env.NEXT_PUBLIC_URL}/posts/${post.id}`} />
+								<meta key={'twitter-title'} name="twitter:title" property="twitter:title" content={`${postName} by ${authorName} — Dream Canvas`} />
+								<meta key={'twitter-description'} name="twitter:description" property="twitter:description" content={postDescription} />
+								<meta key={'twitter-image'} name="twitter:image" property="twitter:image" content={post.images?.[0]?.url ?? ''} />
+							</Head>
+							<PostContent onCancel={onCancel} post={post} refetchPost={refetch} />
+						</>
+
 				}
 
 			</div>
@@ -59,7 +88,7 @@ export default function PostPage({ originalPost }: InferGetServerSidePropsType<t
 	)
 }
 
-export const getServerSideProps = (async function (context){
+export const getServerSideProps = (async function (context) {
 
 	const session = await getServerSession(context.req, context.res, authOptions);
 	const userId = session?.user.id ?? '';
