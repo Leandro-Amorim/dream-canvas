@@ -36,6 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			customer_email: customerId ? undefined : session?.user.email ?? '',
 			success_url: `${process.env.PUBLIC_URL}/checkout-success`,
 			cancel_url: process.env.PUBLIC_URL ?? '',
+			billing_address_collection: 'required',
 		});
 
 		if (stripeSession.url === null) { throw new Error('No url found'); }

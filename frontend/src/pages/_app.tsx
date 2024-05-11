@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import "@/styles/homepage.css";
 import 'react-photo-view/dist/react-photo-view.css';
 
 import type { AppProps } from "next/app";

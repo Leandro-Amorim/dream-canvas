@@ -47,6 +47,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 					break;
 				case 'checkout.session.completed':
 					await completeCheckoutSession(event.data.object);
+					break;
+				case 'customer.created':
+					await upsertCustomer(event.data.object);
+					break;
+				case 'customer.deleted':
+					await deleteCustomer(event.data.object);
+					break;
 			}
 
 			return res.status(200).json({
@@ -82,6 +89,24 @@ const completeCheckoutSession = async (session: Stripe.Checkout.Session) => {
 		customerId: subscription.customer as string,
 		premium: subscription.status === 'active',
 	}).where(eq(users.id, session.client_reference_id as string));
+}
+
+const upsertCustomer = async (customer: Stripe.Customer) => {
+	if (customer.email) {
+		await db.update(users).set({
+			customerId: customer.id,
+		}).where(eq(users.email, customer.email));
+	}
+}
+
+
+const deleteCustomer = async (customer: Stripe.Customer) => {
+	if (customer.email) {
+		await db.update(users).set({
+			customerId: null,
+			premium: false,
+		}).where(eq(users.email, customer.email));
+	}
 }
 
 export default cors(handler as any);

@@ -71,6 +71,8 @@ router.post('handle-webhook', '/', async (ctx) => {
 			prompt: item.prompt,
 		});
 
+		//DISABLE ORPHAN POST CREATION FOR DEMO
+		/*
 		if (type === 'free') {
 			const { customAlphabet } = await import('nanoid');
 			const alphabet = '0123456789abcdefghijklmnopqrstuvwxyz';
@@ -87,6 +89,7 @@ router.post('handle-webhook', '/', async (ctx) => {
 				imageId: item.id,
 			});
 		}
+		*/
 
 		const relevantTable = type === 'free' ? freeQueue : priorityQueue;
 		const relevantCol = type === 'free' ? freeQueue.id : priorityQueue.id;

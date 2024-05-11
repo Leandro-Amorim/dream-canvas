@@ -1,0 +1,24 @@
+.glassy-text {
+	backdrop-filter: blur(3px);
+	background: linear-gradient(180deg, rgb(from hsl(var(--primary)) r g b / 100%), rgb(from hsl(var(--primary)) r g b / 40%));
+	background-clip: text;
+	color: hsl(var(--primary));
+	-webkit-text-fill-color: transparent;
+	clip-path: url(#lockup-headline-mask-path);
+}
+
+.shape-divider {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	overflow: hidden;
+	line-height: 0;
+	z-index: 20;
+}
+
+.shape-divider svg {
+	position: relative;
+	display: block;
+	width: calc(100% + 1.3px);
+	height: 100px;
+}

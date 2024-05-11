@@ -51,7 +51,7 @@ export const getServerSideProps = (async (context) => {
 				authorName: sql<string | null>`case when (${posts.orphan} = true OR ${posts.anonymous}) then NULL else ${users.name} end`.as('authorName'),
 				likeCount: sql<number>`(SELECT count(*) from ${postLikes} where ${postLikes.postId} = ${posts.id})::integer`.as('likeCount'),
 			}
-		).from(posts).leftJoin(users, eq(posts.authorId, users.id))
+		).from(posts).leftJoin(users, eq(posts.authorId, users.id)).where(eq(posts.orphan, false))
 	);
 
 

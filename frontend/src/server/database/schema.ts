@@ -47,15 +47,15 @@ export const users = pgTable("user", {
 	image: text("image").notNull().default(''),
 	coverImage: text("coverImage").notNull().default(''),
 	premium: boolean("premium").notNull().default(false),
-	premiumCredits: integer("premiumCredits").notNull().default(Number(process.env.DAILY_PREMIUM_CREDITS ?? 50)),
-	generations: integer("generations").notNull().default(Number(process.env.DAILY_FREE_USER_GENERATIONS ?? 25)),
+	premiumCredits: integer("premiumCredits").notNull().default(Number(process.env.NEXT_PUBLIC_DAILY_PREMIUM_CREDITS ?? 50)),
+	generations: integer("generations").notNull().default(Number(process.env.NEXT_PUBLIC_DAILY_FREE_USER_GENERATIONS ?? 25)),
 	signupCompleted: boolean("signupCompleted").notNull().default(false),
 })
 
 export const ips = pgTable("ip", {
 	address: text("address").notNull().primaryKey(),
 	lastGeneration: timestamp("lastGeneration", { mode: "date", withTimezone: true }).notNull().defaultNow(),
-	generations: integer("generations").notNull().default(Number(process.env.DAILY_FREE_IP_GENERATIONS ?? 5)),
+	generations: integer("generations").notNull().default(Number(process.env.NEXT_PUBLIC_DAILY_FREE_IP_GENERATIONS ?? 5)),
 })
 
 export const system = pgTable("system", {
