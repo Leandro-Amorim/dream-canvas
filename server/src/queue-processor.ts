@@ -105,7 +105,7 @@ export const formatRequest = (request: GenerationRequest) => {
 	const height = size.height;
 
 	return {
-		"webhook": process.env.WEBHOOK_URL ?? '',
+		"webhook": `${process.env.PUBLIC_URL}/api/webhooks/generation-completed`,
 		"input": {
 			"api": {
 				"method": "POST",

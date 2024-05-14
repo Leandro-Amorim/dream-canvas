@@ -79,7 +79,14 @@ io.on('connection', (socket: SocketExt) => {
 			}
 			cb(true);
 		}
-	})
+	});
+
+	socket.on('generation_completed', (id, cb) => {
+		if (socketUserId === 'server') {
+			io.to(`generation:${id}`).emit("status_update");
+			cb(true);
+		}
+	});
 });
 
 export const startWebsocketsServer = async () => {
