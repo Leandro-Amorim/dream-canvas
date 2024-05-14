@@ -1,18 +1,13 @@
-import { Server } from "socket.io";
-import { GenerationClientToServerEvents, GenerationServerToClientEvents, GenerationSocketExt, InterServerEvents, SocketData } from "./types/sockets";
 import { IncomingMessage, createServer } from "http";
+import { Server } from "socket.io";
+import type { ClientToServerEvents, InterServerEvents, ServerToClientEvents, SocketData, SocketExt } from "./types/sockets";
 import jwt from "jsonwebtoken";
-import { processFreeQueue, processPremiumQueue } from "./queue-processor";
+import { processFreeQueue, processPremiumQueue, processing } from "./queue-processor";
 
-const port = 3002;
+const port = process.env.PORT || 3001;
 const httpServer = createServer();
 
-export const processing = {
-	free: false,
-	priority: false
-}
-
-export const io = new Server<GenerationClientToServerEvents, GenerationServerToClientEvents, InterServerEvents, SocketData>(httpServer, {
+export const io = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>(httpServer, {
 	cors: {
 		origin: process.env.PUBLIC_URL ?? '',
 		methods: ["GET", "POST"],
@@ -52,11 +47,27 @@ io.engine.use((req: IncomingMessage, res: Response, next: (error?: Error) => voi
 	});
 });
 
-io.on('connection', (socket: GenerationSocketExt) => {
+io.on('connection', (socket: SocketExt) => {
+
 	const socketUserId = socket.request.user?.id;
 	if (socketUserId && socketUserId !== 'server') {
-		socket.join(`generation:${socketUserId}`);
+
+		if (socket.request.user?.type === 'notification') {
+			socket.join(`user:${socketUserId}`);
+		}
+		else if (socket.request.user?.type === 'generation') {
+			socket.join(`generation:${socketUserId}`);
+		}
 	}
+
+	socket.on('new_notification', (userIds, cb) => {
+		if (socketUserId === 'server') {
+			for (const userId of userIds) {
+				io.to(`user:${userId}`).emit("notification");
+			}
+			cb(true);
+		}
+	});
 
 	socket.on('new_generation', (type, cb) => {
 		if (socketUserId === 'server') {
@@ -71,9 +82,9 @@ io.on('connection', (socket: GenerationSocketExt) => {
 	})
 });
 
-export const startQueueProcessing = async () => {
+export const startWebsocketsServer = async () => {
 	httpServer.listen(port, () => {
-		console.log(`Queue Server is running at: http://localhost:${port}`);
+		console.log(`Websockets Server is running at: http://localhost:${port}`);
 	});
 	processFreeQueue();
 	processPremiumQueue();

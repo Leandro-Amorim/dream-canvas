@@ -104,7 +104,7 @@ export default async function handler(req: APIRequest, res: NextApiResponse) {
 						data: {
 							id: queueEntry.id,
 							type: 'free',
-							socketAuth: getSocketAuth(queueEntry.id)
+							socketAuth: getSocketAuth(queueEntry.id, 'generation')
 						}
 					} satisfies APIResponse);
 				}
@@ -134,7 +134,7 @@ export default async function handler(req: APIRequest, res: NextApiResponse) {
 						data: {
 							id: queueEntry.id,
 							type: 'free',
-							socketAuth: getSocketAuth(queueEntry.id)
+							socketAuth: getSocketAuth(queueEntry.id, 'generation')
 						}
 					} satisfies APIResponse);
 				}
@@ -166,7 +166,7 @@ export default async function handler(req: APIRequest, res: NextApiResponse) {
 					data: {
 						id: queueEntry.id,
 						type: 'priority',
-						socketAuth: getSocketAuth(queueEntry.id)
+						socketAuth: getSocketAuth(queueEntry.id, 'generation')
 					},
 				} satisfies APIResponse);
 			}
@@ -188,7 +188,7 @@ export default async function handler(req: APIRequest, res: NextApiResponse) {
 				data: {
 					id: queueEntry.id,
 					type: 'priority',
-					socketAuth: getSocketAuth(queueEntry.id)
+					socketAuth: getSocketAuth(queueEntry.id, 'generation')
 				},
 			} satisfies APIResponse);
 		}

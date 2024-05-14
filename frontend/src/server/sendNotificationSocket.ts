@@ -11,7 +11,7 @@ export default function sendSocket(ids: string[]) {
 		expiresIn: '1h',
 	});
 
-	const socket = io(process.env.NEXT_PUBLIC_NOTIFICATION_SERVER ?? '', {
+	const socket = io(process.env.NEXT_PUBLIC_WEBSOCKETS_SERVER ?? '', {
 		extraHeaders: {
 			authorization: `bearer ${jwtData}`
 		},

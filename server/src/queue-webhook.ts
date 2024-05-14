@@ -3,11 +3,11 @@ import Router from '@koa/router';
 import bodyParser from 'koa-bodyparser';
 import { APIOutput } from './types/data';
 import { db } from './database';
-import { freeQueue, images, postImages, posts, priorityQueue } from './schema';
+import { freeQueue, images, priorityQueue } from './schema';
 import { eq } from 'drizzle-orm';
 import { setFailed } from './queue-processor';
 import { parseSize, uploadImage } from './utils';
-import { io } from './queue-websocket-server';
+import { io } from './websockets-server';
 
 const app = new Koa();
 const router = new Router();

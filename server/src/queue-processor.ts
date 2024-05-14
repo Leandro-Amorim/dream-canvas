@@ -1,11 +1,16 @@
 import { asc, eq, sql } from "drizzle-orm";
 import { db } from "./database";
-import { io, processing } from "./queue-websocket-server";
 import { freeQueue, priorityQueue } from "./schema";
 import { GenerationRequest, RunpodAPIState } from "./types/data";
 import { fetchData } from "./utils";
 import { models } from "./data/models";
 import { samplingMethods, sizesNormal, sizesXL } from "./data/settings";
+import { io } from "./websockets-server";
+
+export const processing = {
+	free: false,
+	priority: false
+}
 
 export const processFreeQueue = () => {
 	if (processing.free) {

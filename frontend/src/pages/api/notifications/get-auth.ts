@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		const session = await getServerSession(req, res, authOptions);
 		const userId = session?.user.id ?? '';
 
-		const jwtData = getSocketAuth(userId);
+		const jwtData = getSocketAuth(userId, 'notification');
 
 		return res.status(200).json({
 			status: 'success',

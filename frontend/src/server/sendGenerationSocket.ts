@@ -11,7 +11,7 @@ export default function sendSocket(type: 'free' | 'priority') {
 		expiresIn: '1h',
 	});
 
-	const socket = io(process.env.NEXT_PUBLIC_QUEUE_SERVER ?? '', {
+	const socket = io(process.env.NEXT_PUBLIC_WEBSOCKETS_SERVER ?? '', {
 		extraHeaders: {
 			authorization: `bearer ${jwtData}`
 		},

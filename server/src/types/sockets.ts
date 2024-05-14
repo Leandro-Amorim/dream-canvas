@@ -3,10 +3,12 @@ import { Socket } from "socket.io";
 
 export interface ServerToClientEvents {
 	notification: () => void;
+	status_update: () => void;
 }
 
 export interface ClientToServerEvents {
 	new_notification: (userIds: string[], cb: (success: boolean) => void) => void;
+	new_generation: (type: 'free' | 'premium', cb: (success: boolean) => void) => void;
 }
 
 export interface InterServerEvents {
@@ -18,22 +20,11 @@ export interface SocketData {
 
 export interface SocketRequest extends IncomingMessage {
 	user?: {
+		type: 'notification' | 'generation';
 		id: string
 	}
 }
 
 export interface SocketExt extends Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData> {
-	request: SocketRequest
-}
-
-export interface GenerationServerToClientEvents {
-	status_update: () => void;
-}
-
-export interface GenerationClientToServerEvents {
-	new_generation: (type: 'free' | 'premium', cb: (success: boolean) => void) => void;
-}
-
-export interface GenerationSocketExt extends Socket<GenerationClientToServerEvents, GenerationServerToClientEvents, InterServerEvents, SocketData> {
 	request: SocketRequest
 }

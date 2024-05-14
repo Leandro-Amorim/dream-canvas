@@ -31,7 +31,7 @@ export default function GenerationStatusPoller() {
 		}
 
 		if (generationStatus.socketAuth) {
-			socket = io(process.env.NEXT_PUBLIC_QUEUE_SERVER ?? '', {
+			socket = io(process.env.NEXT_PUBLIC_WEBSOCKETS_SERVER ?? '', {
 				extraHeaders: {
 					authorization: `bearer ${generationStatus.socketAuth}`
 				},
