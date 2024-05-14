@@ -35,7 +35,7 @@ export default async function handler(req: APIRequest<RequestBody>, res: NextApi
 					imagesCursor.where(req.body.cursor)
 				)
 			)
-			.limit(pageSize);
+			.limit(pageSize) as IImage[];
 
 		return res.status(200).json({
 			status: 'success',
