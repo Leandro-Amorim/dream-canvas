@@ -24,16 +24,16 @@ export async function fetchData<T = unknown>(input: string, body?: unknown, head
 }
 
 export const s3Client = new S3Client({
-	region: process.env.AWS_REGION ?? '',
+	region: process.env.AWS_REG ?? '',
 	credentials: {
-		accessKeyId: process.env.AWS_ACCESS_KEY ?? '',
-		secretAccessKey: process.env.AWS_SECRET_KEY ?? '',
+		accessKeyId: process.env.AWS_KEY ?? '',
+		secretAccessKey: process.env.AWS_SECRET ?? '',
 	}
 });
 
 
 export const parseS3Url = function (key: string) {
-	return `https://${process.env.AWS_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+	return `https://${process.env.AWS_BUCKET}.s3.${process.env.AWS_REG}.amazonaws.com/${key}`;
 }
 
 export const uploadImage = async function (key: string, body: Buffer) {
