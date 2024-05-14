@@ -58,7 +58,7 @@ export const getServerSideProps = (async function (context) {
 
 	let defaultImages: IImage[] = [];
 	if (queryIds.length > 0) {
-		defaultImages = await db.select().from(images).where(and(eq(images.userId, userId), inArray(images.id, queryIds)))
+		defaultImages = await db.select().from(images).where(and(eq(images.userId, userId), inArray(images.id, queryIds))) as IImage[];
 	}
 
 	return {
