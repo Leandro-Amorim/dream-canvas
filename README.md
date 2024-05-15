@@ -230,4 +230,4 @@ If you think this project has helped you in any way or you've learned something 
 
 ## License
 
-Distributed under the MIT License. See ` `LICENSE.txt` ` for more information.
+Distributed under the MIT License. See ``LICENSE.txt`` for more information.
