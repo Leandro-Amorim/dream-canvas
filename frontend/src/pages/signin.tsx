@@ -3,8 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { GetServerSideProps, InferGetServerSidePropsType } from "next"
-import { ClientSafeProvider, LiteralUnion, getProviders, signIn } from "next-auth/react"
-import { BuiltInProviderType } from "next-auth/providers/index"
+import { getProviders, signIn } from "next-auth/react"
 import { toast } from "sonner"
 import { useCallback, useState } from "react"
 import { z } from "zod";
@@ -15,6 +14,8 @@ import { db } from "@/server/database/database"
 import { images, postImages, postLikes, posts, users } from "@/server/database/schema"
 import { desc, eq, sql } from "drizzle-orm"
 import Link from "next/link"
+import { useQuery } from "@tanstack/react-query"
+import { Skeleton } from "@/components/ui/skeleton"
 
 const emailSchema = z.string().email();
 
@@ -39,9 +40,6 @@ export const getServerSideProps = (async (context) => {
 		}
 	}
 
-	const providers = await getProviders() ?? {} as Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider>;
-
-
 	const sq = db.$with('sq').as(
 		db.select(
 			{
@@ -59,14 +57,21 @@ export const getServerSideProps = (async (context) => {
 		.limit(5)
 		.orderBy(desc(sq.likeCount));
 
-	return { props: { providers, popularPosts } }
+	return { props: { popularPosts } }
 
 }) satisfies GetServerSideProps<{
-	providers: Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider>,
 	popularPosts: PopularPost[],
 }>
 
-export default function SignIn({ providers, popularPosts }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function SignIn({ popularPosts }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+
+	const { data: providers, isSuccess } = useQuery({
+		queryKey: ['providers'],
+		queryFn: async () => {
+			return getProviders();
+		}
+	})
+
 
 	const icons = {
 		'google': 'https://authjs.dev/img/providers/google.svg',
@@ -121,14 +126,16 @@ export default function SignIn({ providers, popularPosts }: InferGetServerSidePr
 
 						<div className="w-full flex gap-2 mt-7">
 							{
-								Object.values(providers).map((provider) => {
-									return (provider.type === 'oauth' &&
-										<Button className="grow" variant={'outline'} size={'lg'} key={provider.id} onClick={() => onSignIn(provider.id)}>
-											{/*@ts-ignore*/}
-											<Image src={icons[provider.id] ?? `https://authjs.dev/img/providers/${provider.id}.svg`} alt={provider.name} width={24} height={24} />
-										</Button>
-									)
-								})
+								(isSuccess && providers) ?
+									Object.values(providers).map((provider) => {
+										return (provider.type === 'oauth' &&
+											<Button className="grow" variant={'outline'} size={'lg'} key={provider.id} onClick={() => onSignIn(provider.id)}>
+												{/*@ts-ignore*/}
+												<Image src={icons[provider.id] ?? `https://authjs.dev/img/providers/${provider.id}.svg`} alt={provider.name} width={24} height={24} />
+											</Button>
+										)
+									}) :
+									<Skeleton className="w-full h-10" />
 							}
 						</div>
 						<div className="w-full flex gap-[6px] mt-4 items-center text-muted-foreground">
