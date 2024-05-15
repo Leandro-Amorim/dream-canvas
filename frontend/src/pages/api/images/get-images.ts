@@ -26,13 +26,20 @@ export default async function handler(req: APIRequest<RequestBody>, res: NextApi
 		const session = await getServerSession(req, res, authOptions);
 		const userId = session?.user.id ?? '';
 
+		const filters = [
+			eq(images.userId, userId),
+			imagesCursor.where(req.body.cursor)
+		]
+
+		if (req.body.search) {
+			filters.push(sql`${images.prompt}->>'prompt' ilike '%' || ${req.body.search} || '%'`);
+		}
+
 		const data = await db.select().from(images)
 			.orderBy(...imagesCursor.orderBy)
 			.where(
 				and(
-					eq(images.userId, userId),
-					sql`${images.prompt}->>'prompt' ilike '%' || ${req.body.search} || '%'`,
-					imagesCursor.where(req.body.cursor)
+					...filters
 				)
 			)
 			.limit(pageSize) as IImage[];
