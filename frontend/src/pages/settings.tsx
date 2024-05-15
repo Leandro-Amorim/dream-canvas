@@ -435,7 +435,7 @@ function BlockedUser({ blockedUser, refetch }: { blockedUser: IBlock, refetch: (
 				</Avatar>
 
 				<div className="flex flex-col gap-[2px]">
-					<CardDescription className="font-semibold text-black line-clamp-1">{blockedUser.name || 'User'}</CardDescription>
+					<CardDescription className="font-semibold text-card-foreground line-clamp-1">{blockedUser.name || 'User'}</CardDescription>
 					<CardDescription className="line-clamp-1">{blockedUser.description}</CardDescription>
 				</div>
 			</div>

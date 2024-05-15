@@ -96,7 +96,7 @@ export default function PromptSection() {
 				open: false,
 			})
 		}
-	}, []);
+	}, [generationStatus.status, generationToast.open, setGenerationToast]);
 
 	return (
 		<div className="flex flex-col">
