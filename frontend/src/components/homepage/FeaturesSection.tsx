@@ -18,7 +18,7 @@ export default function FeaturesSection() {
 	return (
 		<div id="features" ref={parentRef} className="h-[4000px] z-20 relative bg-primary">
 
-			<motion.div viewport={{ amount: 0.5 }} whileInView={{ opacity: 1 }} initial={{ opacity: 0 }} transition={{ bounce: 0, duration: 0.5 }}
+			<motion.div viewport={{ amount: 0.5 }} whileInView={{ opacity: 1, x: 0 }} initial={{ opacity: 0, x: -100 }} transition={{ bounce: 0, duration: 0.5 }}
 				className="h-screen sticky top-0 flex flex-col">
 				<FeaturesText parentRef={parentRef} />
 				<FeaturesCards parentRef={parentRef} />

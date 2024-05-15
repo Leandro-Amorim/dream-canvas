@@ -85,9 +85,7 @@ export default function FeaturesText({ parentRef }: { parentRef: RefObject<HTMLD
 	};
 
 	return (
-		<motion.div className="flex-1 min-h-0 flex flex-col pl-12 xl:pl-32 container relative"
-			whileInView={{ x: 0 }} viewport={{ amount: 'all', margin: '0px 1000px' }} initial={{ x: -100 }} transition={{ bounce: 0, duration: 0.5 }}>
-
+		<motion.div className="flex-1 min-h-0 flex flex-col pl-12 xl:pl-32 container relative">
 
 			<div className='flex flex-wrap mt-16 md:mt-24 lg:mt-32 whitespace-break-spaces'>
 				<h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white">Made for </h1>
