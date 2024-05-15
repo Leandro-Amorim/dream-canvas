@@ -1,6 +1,4 @@
 <h1 align="center">
-  <br>
-  <br>
 
   ![screenshot](https://raw.githubusercontent.com/Leandro-Amorim/dream-canvas/main/images/image1.jpg)
 
@@ -10,8 +8,8 @@
 
 <h4 align="center">A social network for generating and sharing AI images, made with <a href="https://nextjs.org/" target="_blank">Next.js</a>. You can see a working example at <a href="https://dream-canvas-dev.vercel.app/" target="_blank">dream-canvas-dev.vercel.app</a>.</h4>
 
-> **Note**
-> Unfortunately, I can't guarantee that the image generation in this demo will work, as the API costs come out of my own funds.
+> **Note:**
+> Unfortunately, I can't guarantee that the image generation in this demo will work forever, as the API costs come out of my own funds.
 
 <p align="center">
   <a href="#key-features">Key Features</a> •
