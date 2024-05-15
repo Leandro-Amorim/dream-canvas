@@ -71,6 +71,7 @@ io.on('connection', (socket: SocketExt) => {
 
 	socket.on('new_generation', (type, cb) => {
 		if (socketUserId === 'server') {
+			console.log('New generation arrived', type);
 			if (type === 'free') {
 				processing.free = true;
 			}
@@ -83,6 +84,7 @@ io.on('connection', (socket: SocketExt) => {
 
 	socket.on('generation_completed', (id, cb) => {
 		if (socketUserId === 'server') {
+			console.log('Generation completed', id);
 			io.to(`generation:${id}`).emit("status_update");
 			cb(true);
 		}

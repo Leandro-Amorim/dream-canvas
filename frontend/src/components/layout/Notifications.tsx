@@ -89,6 +89,7 @@ export default function Notifications() {
 	useEffect(() => {
 
 		function onNotification() {
+			console.log('New notification');
 			checkNewMutation().then((data) => {
 				setHasNew(data.status === 'success' && data.data.hasNew === true);
 				queryClient.invalidateQueries({ queryKey: ['notifications'] });

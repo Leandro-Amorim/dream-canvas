@@ -27,6 +27,7 @@ export default function GenerationStatusPoller() {
 		let socket: Socket;
 
 		function onStatusUpdate() {
+			console.log('Generation status update');
 			checkStatus();
 		}
 
