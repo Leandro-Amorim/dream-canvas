@@ -7,9 +7,6 @@ export interface ServerToClientEvents {
 }
 
 export interface ClientToServerEvents {
-	new_notification: (userIds: string[], cb: (success: boolean) => void) => void;
-	new_generation: (type: 'free' | 'premium', cb: (success: boolean) => void) => void;
-	generation_completed: (id: string, cb: (success: boolean) => void) => void;
 }
 
 export interface InterServerEvents {

@@ -1,7 +1,6 @@
 import { sign } from "jsonwebtoken";
-import { io } from "socket.io-client";
 
-export default function notifyGenerationCompleted(id: string) {
+export default async function notifyGenerationCompleted(id: string) {
 
 	const jwtData = sign({
 		data: {
@@ -11,17 +10,15 @@ export default function notifyGenerationCompleted(id: string) {
 		expiresIn: '1h',
 	});
 
-	const socket = io(process.env.NEXT_PUBLIC_WEBSOCKETS_SERVER ?? '', {
-		extraHeaders: {
-			authorization: `bearer ${jwtData}`
+	await fetch(`${process.env.NEXT_PUBLIC_WEBSOCKETS_SERVER}/handler`, {
+		headers: {
+			"Content-Type": "application/json",
+			"authorization": `bearer ${jwtData}`
 		},
-		autoConnect: false,
-	});
-	socket.connect();
-
-	socket.once('connect', () => {
-		socket.emitWithAck('generation_completed', id).then(() => {
-			socket.disconnect();
-		})
+		method:'POST',
+		body: JSON.stringify({
+			type: 'generation_completed',
+			id
+		}),
 	});
 }

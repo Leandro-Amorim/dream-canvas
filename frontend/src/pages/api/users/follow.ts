@@ -59,7 +59,7 @@ export default async function handler(req: APIRequest<RequestBody>, res: NextApi
 					userId: req.body.userId,
 					followId: insertedFollows[0].id,
 				})
-				sendSocket([req.body.userId?? '']);
+				await sendSocket([req.body.userId?? '']);
 			}
 		}
 		catch (err) {

@@ -67,7 +67,7 @@ export default async function handler(req: APIRequest<RequestBody>, res: NextApi
 						postId: req.body.postId,
 						data: req.body.message,
 					});
-					sendSocket([post?.authorId ?? '']);
+					await sendSocket([post?.authorId ?? '']);
 				}
 			}
 			else {
@@ -91,7 +91,7 @@ export default async function handler(req: APIRequest<RequestBody>, res: NextApi
 						})
 					)
 
-					sendSocket(subscribers.map((s) => s.userId));
+					await sendSocket(subscribers.map((s) => s.userId));
 				}
 			}
 		}

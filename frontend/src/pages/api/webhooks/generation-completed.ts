@@ -109,7 +109,7 @@ export default async function handler(req: APIRequest<RequestBody>, res: NextApi
 		const relevantTable = type === 'free' ? freeQueue : priorityQueue;
 		const relevantCol = type === 'free' ? freeQueue.id : priorityQueue.id;
 		await db.update(relevantTable).set({ status: 'COMPLETED' }).where(eq(relevantCol, item.id));
-		notifyGenerationCompleted(item.id);
+		await notifyGenerationCompleted(item.id);
 	}
 	catch (err) {
 		console.error(err);
@@ -126,7 +126,7 @@ const setFailed = async (type: 'free' | 'priority', id: string) => {
 	const relevantTable = type === 'free' ? freeQueue : priorityQueue;
 	const relevantCol = type === 'free' ? freeQueue.id : priorityQueue.id;
 	await db.update(relevantTable).set({ status: 'FAILED' }).where(eq(relevantCol, id));
-	notifyGenerationCompleted(id);
+	await notifyGenerationCompleted(id);
 }
 
 export const config = {

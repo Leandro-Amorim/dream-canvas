@@ -60,7 +60,7 @@ export default async function handler(req: APIRequest<RequestBody>, res: NextApi
 					likeId: insertedLikes[0].id,
 					postId: req.body.postId
 				})
-				sendSocket([post?.authorId ?? '']);
+				await sendSocket([post?.authorId ?? '']);
 			}
 
 		}

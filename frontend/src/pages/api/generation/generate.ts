@@ -97,7 +97,7 @@ export default async function handler(req: APIRequest, res: NextApiResponse) {
 						prompt: req.body,
 					}).returning({ id: freeQueue.id }))[0];
 
-					sendSocket('free');
+					await sendSocket('free');
 
 					return res.status(200).json({
 						status: 'success',
@@ -127,7 +127,7 @@ export default async function handler(req: APIRequest, res: NextApiResponse) {
 						prompt: req.body,
 					}).returning({ id: freeQueue.id }))[0];
 
-					sendSocket('free');
+					await sendSocket('free');
 
 					return res.status(200).json({
 						status: 'success',
@@ -159,7 +159,7 @@ export default async function handler(req: APIRequest, res: NextApiResponse) {
 					prompt: req.body,
 				}).returning({ id: priorityQueue.id }))[0];
 
-				sendSocket('priority');
+				await sendSocket('priority');
 
 				return res.status(200).json({
 					status: 'success',
@@ -181,7 +181,7 @@ export default async function handler(req: APIRequest, res: NextApiResponse) {
 				prompt: req.body,
 			}).returning({ id: priorityQueue.id }))[0];
 
-			sendSocket('priority');
+			await sendSocket('priority');
 
 			return res.status(200).json({
 				status: 'success',
